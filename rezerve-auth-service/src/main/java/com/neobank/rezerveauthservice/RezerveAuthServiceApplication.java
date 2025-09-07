@@ -1,0 +1,13 @@
+package com.neobank.rezerveauthservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RezerveAuthServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(RezerveAuthServiceApplication.class, args);
+    }
+
+}
