@@ -1,6 +1,6 @@
-package com.neobank.rezerveauthservice.model;
+package com.rezerve.authservice.model;
 
-import com.neobank.rezerveauthservice.model.enums.Role;
+import com.rezerve.authservice.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class User {
     private Role role;
 
     @Column(nullable = false)
-    private String name;
+    private String fullName;
 
     @Column(nullable = false, unique = true)
     private Long phoneNumber;
