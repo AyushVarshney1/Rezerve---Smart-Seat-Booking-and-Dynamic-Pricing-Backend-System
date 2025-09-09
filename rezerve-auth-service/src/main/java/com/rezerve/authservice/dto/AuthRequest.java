@@ -25,6 +25,6 @@ public class AuthRequest {
     private String fullName;
 
     @NotNull(groups = CreateUserValidationGroup.class, message = "Phone Number is Requried")
-    @Size(min = 10, max = 10)
-    private Long phoneNumber;
+    @Size(min = 10, max = 20)
+    private String phoneNumber;
 }

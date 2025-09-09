@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserMapper {
 
+    private final PasswordEncoder passwordEncoder;
+
     public User toUser(AuthRequest authRequest) {
         User user = new User();
         user.setEmail(authRequest.getEmail());
         user.setRole(authRequest.getRole());
         user.setFullName(authRequest.getFullName());
         user.setPhoneNumber(authRequest.getPhoneNumber());
+        user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
         return user;
     }
 

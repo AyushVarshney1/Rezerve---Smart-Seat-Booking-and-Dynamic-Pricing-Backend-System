@@ -1,0 +1,42 @@
+networks:
+  rezerve:
+    driver: bridge
+
+services:
+  rezerve-auth-service-db:
+    image: postgres:15
+    container_name: rezerve_auth_service_db
+    restart: always
+    environment:
+      POSTGRES_DB: rezerve-auth-db
+      POSTGRES_USER: admin-rezerve
+      POSTGRES_PASSWORD: password-rezerve
+    ports:
+      - "8000:5432"
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data
+    networks:
+      - rezerve
+
+  rezerve-auth-service:
+    build:
+      context: ./rezerve-auth-service
+      dockerfile: Dockerfile
+    container_name: rezerve_auth_service
+    restart: always
+    depends_on:
+      - rezerve-auth-service-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-auth-service-db:5432/rezerve-auth-db
+      SPRING_DATASOURCE_USERNAME: admin-rezerve
+      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: 6E141C5D561C2ACC14E87A271158EAB44C1F5E6734B98A27D12CF0348F1B2C9E
+      SPRING_SQL_INIT_MODE: always
+    ports:
+      - "6000:6000"
+    networks:
+      - rezerve
+
+volumes:
+  auth_postgres_data:

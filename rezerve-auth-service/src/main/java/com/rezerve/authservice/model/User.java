@@ -29,5 +29,5 @@ public class User {
     private String fullName;
 
     @Column(nullable = false, unique = true)
-    private Long phoneNumber;
+    private String phoneNumber;
 }
