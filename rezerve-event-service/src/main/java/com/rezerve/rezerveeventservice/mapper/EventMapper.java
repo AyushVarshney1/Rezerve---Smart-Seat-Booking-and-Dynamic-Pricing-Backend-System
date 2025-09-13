@@ -5,7 +5,6 @@ import com.rezerve.rezerveeventservice.dto.response.TravelEventResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.VenueEventResponseDto;
 import com.rezerve.rezerveeventservice.model.Event;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class EventMapper {

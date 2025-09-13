@@ -19,7 +19,7 @@ public class EventResponseDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Integer totalSeats;
-    private BigDecimal price;
+    private Double price;
 }
 
 

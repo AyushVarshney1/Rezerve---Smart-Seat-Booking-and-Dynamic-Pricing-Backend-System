@@ -54,7 +54,7 @@ public class Event {
     private Integer totalSeats;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private Double price;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
