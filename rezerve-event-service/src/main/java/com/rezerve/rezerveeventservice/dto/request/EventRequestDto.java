@@ -28,4 +28,10 @@ public class EventRequestDto {
     private Integer totalSeats;
     @NotBlank(message = "Price name is required")
     private Double price;
+    @NotBlank(message = "From Location is required for travel event")
+    private String fromLocation;
+    @NotBlank(message = "To Location is required for travel event")
+    private String toLocation;
+    @NotBlank(message = "Venue Location is required for Venue event")
+    private String venueLocation;
 }

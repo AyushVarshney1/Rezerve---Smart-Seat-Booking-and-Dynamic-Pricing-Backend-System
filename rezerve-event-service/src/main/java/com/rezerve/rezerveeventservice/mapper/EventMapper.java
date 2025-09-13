@@ -1,10 +1,13 @@
 package com.rezerve.rezerveeventservice.mapper;
 
+import com.rezerve.rezerveeventservice.dto.request.EventRequestDto;
+import com.rezerve.rezerveeventservice.dto.response.AuthServiceGrpcResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.EventResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.TravelEventResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.VenueEventResponseDto;
 import com.rezerve.rezerveeventservice.model.Event;
 import org.springframework.stereotype.Component;
+import auth.AuthResponse;
 
 @Component
 public class EventMapper {
@@ -41,5 +44,25 @@ public class EventMapper {
         eventResponseDto.setStartTime(event.getStartTime());
         eventResponseDto.setEndTime(event.getEndTime());
         eventResponseDto.setTotalSeats(event.getTotalSeats());
+    }
+
+    public AuthServiceGrpcResponseDto authServiceGrpcResponseDto(AuthResponse authResponse){
+        AuthServiceGrpcResponseDto authServiceGrpcResponseDto = new AuthServiceGrpcResponseDto();
+        authServiceGrpcResponseDto.setUserId(authResponse.getUserId());
+        authServiceGrpcResponseDto.setUserEmail(authResponse.getUserEmail());
+        authServiceGrpcResponseDto.setUserRole(authResponse.getUserRole());
+        return authServiceGrpcResponseDto;
+    }
+
+    public Event toEvent(EventRequestDto eventRequestDto){
+        Event event = new Event();
+        event.setCategory(eventRequestDto.getCategory());
+        event.setName(eventRequestDto.getName());
+        event.setDescription(eventRequestDto.getDescription());
+        event.setPrice(eventRequestDto.getPrice());
+        event.setStartTime(eventRequestDto.getStartTime());
+        event.setEndTime(eventRequestDto.getEndTime());
+        event.setTotalSeats(eventRequestDto.getTotalSeats());
+        return event;
     }
 }

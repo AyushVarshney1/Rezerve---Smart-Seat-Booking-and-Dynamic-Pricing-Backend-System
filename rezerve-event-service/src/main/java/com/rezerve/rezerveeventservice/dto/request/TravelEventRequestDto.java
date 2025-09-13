@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TravelEventRequestDto {
+public class TravelEventRequestDto extends EventRequestDto{
 
     @NotBlank(message = "From Location is required for travel event")
     private String fromLocation;
