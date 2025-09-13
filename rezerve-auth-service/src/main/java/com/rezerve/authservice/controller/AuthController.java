@@ -1,6 +1,6 @@
 package com.rezerve.authservice.controller;
 
-import com.rezerve.authservice.dto.AuthRequest;
+import com.rezerve.authservice.dto.AuthRequestDto;
 import com.rezerve.authservice.dto.AuthResponseDto;
 import com.rezerve.authservice.dto.validator.CreateUserValidationGroup;
 import com.rezerve.authservice.mapper.UserMapper;
@@ -22,14 +22,14 @@ public class AuthController {
     private final UserMapper userMapper;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Validated({Default.class, CreateUserValidationGroup.class}) @RequestBody AuthRequest authRequest) {
-        String token = authService.createUser(authRequest);
+    public ResponseEntity<String> signup(@Validated({Default.class, CreateUserValidationGroup.class}) @RequestBody AuthRequestDto authRequestDto) {
+        String token = authService.createUser(authRequestDto);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Validated({Default.class}) @RequestBody AuthRequest authRequest) {
-        String token = authService.getToken(authRequest);
+    public ResponseEntity<String> login(@Validated({Default.class}) @RequestBody AuthRequestDto authRequestDto) {
+        String token = authService.getToken(authRequestDto);
         return ResponseEntity.ok(token);
     }
 

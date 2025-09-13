@@ -1,6 +1,6 @@
 package com.rezerve.authservice.mapper;
 
-import com.rezerve.authservice.dto.AuthRequest;
+import com.rezerve.authservice.dto.AuthRequestDto;
 import com.rezerve.authservice.dto.AuthResponseDto;
 import com.rezerve.authservice.model.User;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +13,13 @@ public class UserMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    public User toUser(AuthRequest authRequest) {
+    public User toUser(AuthRequestDto authRequestDto) {
         User user = new User();
-        user.setEmail(authRequest.getEmail());
-        user.setRole(authRequest.getRole());
-        user.setFullName(authRequest.getFullName());
-        user.setPhoneNumber(authRequest.getPhoneNumber());
-        user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        user.setEmail(authRequestDto.getEmail());
+        user.setRole(authRequestDto.getRole());
+        user.setFullName(authRequestDto.getFullName());
+        user.setPhoneNumber(authRequestDto.getPhoneNumber());
+        user.setPassword(passwordEncoder.encode(authRequestDto.getPassword()));
         return user;
     }
 

@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthRequest {
+public class AuthRequestDto {
 
     @NotNull(message = "Email is required")
     private String email;

@@ -1,7 +1,6 @@
 package com.rezerve.authservice.service;
 
-import com.rezerve.authservice.dto.AuthRequest;
-import com.rezerve.authservice.exception.UserNotFoundException;
+import com.rezerve.authservice.dto.AuthRequestDto;
 import com.rezerve.authservice.model.User;
 import com.rezerve.authservice.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
@@ -19,18 +18,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public String createUser(AuthRequest authRequest) {
-        User user = userService.createUser(authRequest);
+    public String createUser(AuthRequestDto authRequestDto) {
+        User user = userService.createUser(authRequestDto);
 
         String token = jwtUtil.generateToken(user.getEmail(),user.getRole().toString());
 
         return token;
     }
 
-    public String getToken(AuthRequest authRequest) {
-        User user = userService.findByEmail(authRequest.getEmail());
+    public String getToken(AuthRequestDto authRequestDto) {
+        User user = userService.findByEmail(authRequestDto.getEmail());
 
-        if(!passwordEncoder.matches(authRequest.getPassword(),user.getPassword())){
+        if(!passwordEncoder.matches(authRequestDto.getPassword(),user.getPassword())){
             throw new BadCredentialsException("Incorrect credentials. Check if email or password is correct.");
         }
 

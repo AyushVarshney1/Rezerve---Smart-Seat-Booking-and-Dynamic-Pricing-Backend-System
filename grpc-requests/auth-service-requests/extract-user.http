@@ -1,0 +1,5 @@
+GRPC localhost:9001/AuthService/ExtractUserInfo
+
+{
+  "token" : "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhMkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTc3NTM4MjQsImV4cCI6MTc1Nzc4OTgyNH0.rY2_O2wusZrkGhMtWrGdGqTCZvLQwBMHzBpvC4jR9SuvRXexc2q5hlqj8reiYLW1"
+}

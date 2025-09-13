@@ -1,6 +1,6 @@
 package com.rezerve.authservice.service;
 
-import com.rezerve.authservice.dto.AuthRequest;
+import com.rezerve.authservice.dto.AuthRequestDto;
 import com.rezerve.authservice.exception.UserNotFoundException;
 import com.rezerve.authservice.mapper.UserMapper;
 import com.rezerve.authservice.model.User;
@@ -17,8 +17,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public User createUser(AuthRequest authRequest) {
-        User user = userMapper.toUser(authRequest);
+    public User createUser(AuthRequestDto authRequestDto) {
+        User user = userMapper.toUser(authRequestDto);
         User savedUser = userRepository.save(user);
 
         return savedUser;
