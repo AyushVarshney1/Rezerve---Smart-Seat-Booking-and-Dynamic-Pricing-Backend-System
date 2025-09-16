@@ -1,12 +1,9 @@
 package com.rezerve.rezerveeventservice.exception;
 
-import com.rezerve.rezerveeventservice.model.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,5 +26,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidRequestBodyException.class)
     public ResponseEntity<String> handleInvalidRequestBodyException(InvalidRequestBodyException ex){
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidHeaderException.class)
+    public ResponseEntity<String> handleInvalidHeaderException(InvalidHeaderException ex){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }
