@@ -1,6 +1,7 @@
 package com.rezerve.rezerveeventservice.mapper;
 
-import com.rezerve.rezerveeventservice.dto.request.EventRequestDto;
+import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
+import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.response.AuthServiceGrpcResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.EventResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.TravelEventResponseDto;
@@ -54,15 +55,30 @@ public class EventMapper {
         return authServiceGrpcResponseDto;
     }
 
-    public Event toEvent(EventRequestDto eventRequestDto){
+    public Event toTravelEvent(TravelEventRequestDto travelEventRequestDto){
         Event event = new Event();
-        event.setCategory(eventRequestDto.getCategory());
-        event.setName(eventRequestDto.getName());
-        event.setDescription(eventRequestDto.getDescription());
-        event.setPrice(eventRequestDto.getPrice());
-        event.setStartTime(eventRequestDto.getStartTime());
-        event.setEndTime(eventRequestDto.getEndTime());
-        event.setTotalSeats(eventRequestDto.getTotalSeats());
+        event.setCategory(travelEventRequestDto.getCategory());
+        event.setName(travelEventRequestDto.getName());
+        event.setDescription(travelEventRequestDto.getDescription());
+        event.setPrice(travelEventRequestDto.getPrice());
+        event.setStartTime(travelEventRequestDto.getStartTime());
+        event.setEndTime(travelEventRequestDto.getEndTime());
+        event.setTotalSeats(travelEventRequestDto.getTotalSeats());
+        event.setFromLocation(travelEventRequestDto.getFromLocation());
+        event.setToLocation(travelEventRequestDto.getToLocation());
+        return event;
+    }
+
+    public Event toVenueEvent(VenueEventRequestDto venueEventRequestDto){
+        Event event = new Event();
+        event.setCategory(venueEventRequestDto.getCategory());
+        event.setName(venueEventRequestDto.getName());
+        event.setDescription(venueEventRequestDto.getDescription());
+        event.setPrice(venueEventRequestDto.getPrice());
+        event.setStartTime(venueEventRequestDto.getStartTime());
+        event.setEndTime(venueEventRequestDto.getEndTime());
+        event.setTotalSeats(venueEventRequestDto.getTotalSeats());
+        event.setVenueLocation(venueEventRequestDto.getVenueLocation());
         return event;
     }
 }

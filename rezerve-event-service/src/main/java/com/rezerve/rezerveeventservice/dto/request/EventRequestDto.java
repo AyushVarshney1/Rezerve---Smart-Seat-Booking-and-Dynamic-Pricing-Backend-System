@@ -1,14 +1,12 @@
 package com.rezerve.rezerveeventservice.dto.request;
 
 import com.rezerve.rezerveeventservice.model.enums.EventCategory;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,21 +15,17 @@ public class EventRequestDto {
 
     @NotBlank(message = "Event name is required")
     private String name;
-    @NotBlank(message = "Category is required")
+    @NotNull(message = "Category is required")
     private EventCategory category;
     private String description;
-    @NotBlank(message = "Start Time is required")
+    @NotNull(message = "Start Time is required")
     private LocalDateTime startTime;
-    @NotBlank(message = "End Time is required")
+    @NotNull(message = "End Time is required")
     private LocalDateTime endTime;
-    @NotBlank(message = "Total Seats number is required")
+    @NotNull(message = "Total Seats number is required")
+    @Min(1)
     private Integer totalSeats;
-    @NotBlank(message = "Price name is required")
+    @NotNull(message = "Price name is required")
+    @Min(1)
     private Double price;
-    @NotBlank(message = "From Location is required for travel event")
-    private String fromLocation;
-    @NotBlank(message = "To Location is required for travel event")
-    private String toLocation;
-    @NotBlank(message = "Venue Location is required for Venue event")
-    private String venueLocation;
 }

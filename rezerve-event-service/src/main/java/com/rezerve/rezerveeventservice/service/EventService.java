@@ -1,11 +1,11 @@
 package com.rezerve.rezerveeventservice.service;
 
-import com.rezerve.rezerveeventservice.dto.request.EventRequestDto;
 import com.rezerve.rezerveeventservice.dto.request.EventUpdateRequestDto;
+import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
+import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.response.AuthServiceGrpcResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.EventResponseDto;
 import com.rezerve.rezerveeventservice.exception.EventNotFoundException;
-import com.rezerve.rezerveeventservice.exception.InvalidRequestBodyException;
 import com.rezerve.rezerveeventservice.exception.UnauthorisedException;
 import com.rezerve.rezerveeventservice.grpc.AuthServiceGrpcClient;
 import com.rezerve.rezerveeventservice.mapper.EventMapper;
@@ -15,7 +15,6 @@ import com.rezerve.rezerveeventservice.util.CheckUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,34 +39,35 @@ public class EventService {
         return eventMapper.toEventResponseDto(event);
     }
 
-    public EventResponseDto createEvent(String token, EventRequestDto eventRequestDto) {
+    public EventResponseDto createTravelEvent(String token, TravelEventRequestDto travelEventRequestDto) {
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
         if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
             throw new UnauthorisedException("Only admins can create event");
         }
 
-        Event event = eventMapper.toEvent(eventRequestDto);
-
-        switch(eventRequestDto.getCategory()){
-            case BUS, FLIGHT, TRAIN -> {
-                event.setFromLocation(eventRequestDto.getFromLocation());
-                event.setToLocation(eventRequestDto.getToLocation());
-            }
-            case MOVIE, CONCERT -> {
-                event.setVenueLocation(eventRequestDto.getVenueLocation());
-            }
-        }
+        Event event = eventMapper.toTravelEvent(travelEventRequestDto);
 
         return  eventMapper.toEventResponseDto(eventRepository.save(event));
     }
 
-    public EventResponseDto updateEvent(String token, EventUpdateRequestDto eventUpdateRequestDto) {
+    public EventResponseDto createVenueEvent(String token, VenueEventRequestDto venueEventRequestDto) {
+        AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
+        if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
+            throw new UnauthorisedException("Only admins can create event");
+        }
+
+        Event event = eventMapper.toVenueEvent(venueEventRequestDto);
+
+        return  eventMapper.toEventResponseDto(eventRepository.save(event));
+    }
+
+    public EventResponseDto updateEvent(String token, Long eventId, EventUpdateRequestDto eventUpdateRequestDto) {
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
         if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
             throw new UnauthorisedException("Only admins can update event");
         }
 
-        Event oldEvent = eventRepository.findById(eventUpdateRequestDto.getId()).orElseThrow(() -> new EventNotFoundException("Event with id: " + eventUpdateRequestDto.getId() + " not found"));
+        Event oldEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " not found"));
 
         Event newEvent = checkUpdateRequest.isUpdateRequestValid(oldEvent, eventUpdateRequestDto);
 

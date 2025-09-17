@@ -50,7 +50,7 @@ public class EventController {
             throw new InvalidRequestBodyException("Invalid travel category event");
         }
 
-        EventResponseDto eventResponseDto = eventService.createEvent(token, travelEventRequestDto);
+        EventResponseDto eventResponseDto = eventService.createTravelEvent(token, travelEventRequestDto);
 
         return ResponseEntity.ok(eventResponseDto);
     }
@@ -68,14 +68,14 @@ public class EventController {
             throw new InvalidRequestBodyException("Invalid venue category event");
         }
 
-        EventResponseDto eventResponseDto = eventService.createEvent(token, venueEventRequestDto);
+        EventResponseDto eventResponseDto = eventService.createVenueEvent(token, venueEventRequestDto);
 
         return ResponseEntity.ok(eventResponseDto);
     }
 
     // UPDATE EVENT (WE DON'T ALLOW LOCATION CHANGES OF AN EVENT) (ONLY ADMINS CAN UPDATE AN EVENT)
-    @PatchMapping("/update-event")
-    public ResponseEntity<EventResponseDto> updateEvent(@RequestHeader("Authorization") String header, @Valid @RequestBody EventUpdateRequestDto eventUpdateRequestDto){
+    @PatchMapping("/update-event/{eventId}")
+    public ResponseEntity<EventResponseDto> updateEvent(@RequestHeader("Authorization") String header, @PathVariable("eventId") Long eventId, @Valid @RequestBody EventUpdateRequestDto eventUpdateRequestDto){
         if(header == null || !header.startsWith("Bearer ")) {
             throw new InvalidHeaderException("Invalid Header");
         }
@@ -86,7 +86,7 @@ public class EventController {
 
         String token = header.substring(7);
 
-        EventResponseDto eventResponseDto = eventService.updateEvent(token,eventUpdateRequestDto);
+        EventResponseDto eventResponseDto = eventService.updateEvent(token,eventId,eventUpdateRequestDto);
 
         return ResponseEntity.ok(eventResponseDto);
     }

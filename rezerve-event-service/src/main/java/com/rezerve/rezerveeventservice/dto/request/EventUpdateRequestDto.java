@@ -1,6 +1,5 @@
 package com.rezerve.rezerveeventservice.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +10,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class EventUpdateRequestDto {
-
-    @NotBlank(message = "EVENT ID IS REQUIRED")
-    private Long id;
 
     private String name;
     private String description;

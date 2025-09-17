@@ -1,15 +1,16 @@
 package com.rezerve.rezerveeventservice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.rezerve.rezerveeventservice.model.enums.EventCategory;
 import lombok.Getter;
 import lombok.Setter;
 
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL) // exclude null fields
 public class EventResponseDto {
 
     private Long id;
