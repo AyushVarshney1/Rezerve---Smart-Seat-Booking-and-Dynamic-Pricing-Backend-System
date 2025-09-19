@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Rezerve - Smart Seat Booking and Dynamic Pricing Backend System.iml" filepath="$PROJECT_DIR$/.idea/Rezerve - Smart Seat Booking and Dynamic Pricing Backend System.iml" />
       <module fileurl="file://$PROJECT_DIR$/rezerve-auth-service/rezerve-auth-service.iml" filepath="$PROJECT_DIR$/rezerve-auth-service/rezerve-auth-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rezerve-booking-service/rezerve-booking-service.iml" filepath="$PROJECT_DIR$/rezerve-booking-service/rezerve-booking-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/rezerve-event-service/rezerve-event-service.iml" filepath="$PROJECT_DIR$/rezerve-event-service/rezerve-event-service.iml" />
     </modules>
   </component>
