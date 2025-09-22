@@ -1,6 +1,7 @@
 package com.rezerve.rezervebookingservice.model;
 
 import com.rezerve.rezervebookingservice.model.enums.BookingStatus;
+import com.rezerve.rezervebookingservice.model.enums.EventCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,13 @@ public class Booking {
     private Long eventId;
 
     @Column(nullable = false, updatable = false)
+    private String eventName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false)
+    private EventCategory eventCategory;
+
+    @Column(nullable = false, updatable = false)
     private Integer totalTickets;
 
     @Column(nullable = false, updatable = false)
@@ -42,4 +50,11 @@ public class Booking {
 
     @CreatedDate
     private LocalDateTime createdDate;
+
+    @PrePersist
+    public void generateBookingId() {
+        if (bookingId == null) {
+            bookingId = UUID.randomUUID();
+        }
+    }
 }

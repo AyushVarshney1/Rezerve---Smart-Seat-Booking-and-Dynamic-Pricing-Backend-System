@@ -39,7 +39,7 @@ public class AuthServiceGrpcClient {
         try{
             AuthResponse authResponse = blockingStub.extractUserInfo(authRequest);
             log.info("Received response from Auth service via GRPC: {}", authResponse);
-            return bookingMapper.authServiceGrpcResponseDto(authResponse);
+            return bookingMapper.toAuthServiceGrpcResponseDto(authResponse);
 
         }catch (StatusRuntimeException e) {
             switch (e.getStatus().getCode()) {

@@ -1,17 +1,20 @@
 package com.rezerve.rezervebookingservice.service;
 
-import com.rezerve.rezervebookingservice.dto.AuthServiceGrpcResponseDto;
-import com.rezerve.rezervebookingservice.dto.BookingAdminResponseDto;
+import com.rezerve.rezervebookingservice.dto.*;
 import com.rezerve.rezervebookingservice.exception.BookingNotFoundException;
 import com.rezerve.rezervebookingservice.exception.UnauthorisedException;
 import com.rezerve.rezervebookingservice.grpc.AuthServiceGrpcClient;
+import com.rezerve.rezervebookingservice.grpc.EventServiceGrpcClient;
+import com.rezerve.rezervebookingservice.grpc.InventoryServiceGrpcClient;
 import com.rezerve.rezervebookingservice.mapper.BookingMapper;
 import com.rezerve.rezervebookingservice.model.Booking;
 import com.rezerve.rezervebookingservice.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,8 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final BookingMapper bookingMapper;
+    private final EventServiceGrpcClient eventServiceGrpcClient;
+    private final InventoryServiceGrpcClient inventoryServiceGrpcClient;
 
     public List<BookingAdminResponseDto> getAllBookings(String token){
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
@@ -45,5 +50,31 @@ public class BookingService {
                 .orElseThrow(() -> new BookingNotFoundException("Booking with id: " + bookingId + " not found"));
 
         return bookingMapper.toBookingAdminResponseDto(booking);
+    }
+
+    public BookingUserResponseDto createBooking(String token, BookingRequestDto bookingRequestDto){
+        AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
+
+        EventServiceGrpcResponseDto eventServiceGrpcResponseDto = eventServiceGrpcClient.extractEventInfo(bookingRequestDto.getEventId());
+
+        inventoryServiceGrpcClient.bookSeats(bookingRequestDto.getEventId(), bookingRequestDto.getTotalTickets());
+
+        Booking booking = bookingMapper.toBooking(bookingRequestDto,authServiceGrpcResponseDto,eventServiceGrpcResponseDto);
+
+        int retries = 3;
+        while(retries-- > 0){
+            try{
+                if(booking.getBookingId() == null){
+                    booking.setBookingId(UUID.randomUUID());
+                }
+                bookingRepository.save(booking);
+                return bookingMapper.toBookingUserResponseDto(booking);
+
+            }catch (DataIntegrityViolationException e) {
+                booking.setBookingId(UUID.randomUUID());
+            }
+        }
+
+        throw new RuntimeException("Failed to create booking after retries due to UUID collision");
     }
 }

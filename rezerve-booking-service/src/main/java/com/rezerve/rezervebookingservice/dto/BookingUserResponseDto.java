@@ -1,6 +1,7 @@
 package com.rezerve.rezervebookingservice.dto;
 
 import com.rezerve.rezervebookingservice.model.enums.BookingStatus;
+import com.rezerve.rezervebookingservice.model.enums.EventCategory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,8 @@ import java.util.UUID;
 public class BookingUserResponseDto {
 
     private UUID bookingId;
+    private String eventName;
+    private EventCategory eventCategory;
     private Integer totalTickets;
     private Double totalPrice;
     private LocalDateTime createdDate;

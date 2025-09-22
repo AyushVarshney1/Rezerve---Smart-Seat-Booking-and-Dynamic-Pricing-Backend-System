@@ -27,4 +27,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBookingNotFoundException(BookingNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(GrpcServerException.class)
+    public ResponseEntity<String> handleEventServiceGrpcException(GrpcServerException ex){
+        return ResponseEntity.internalServerError().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<String> handleEventNotFoundException(EventNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EventSoldOutException.class)
+    public ResponseEntity<String> handleEventSoldOutException(EventSoldOutException ex){
+        return ResponseEntity.unprocessableEntity().body(ex.getMessage());
+    }
 }
