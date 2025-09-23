@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/rezerve-auth-service/rezerve-auth-service.iml" filepath="$PROJECT_DIR$/rezerve-auth-service/rezerve-auth-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/rezerve-booking-service/rezerve-booking-service.iml" filepath="$PROJECT_DIR$/rezerve-booking-service/rezerve-booking-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/rezerve-event-service/rezerve-event-service.iml" filepath="$PROJECT_DIR$/rezerve-event-service/rezerve-event-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rezerve-inventory-service/rezerve-inventory-service.iml" filepath="$PROJECT_DIR$/rezerve-inventory-service/rezerve-inventory-service.iml" />
     </modules>
   </component>
 </project>

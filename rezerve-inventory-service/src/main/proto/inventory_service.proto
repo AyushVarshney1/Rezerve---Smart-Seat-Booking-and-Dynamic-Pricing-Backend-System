@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "inventory";
+option java_multiple_files = true;
+
+service InventoryService{
+  rpc BookSeats(InventoryRequest) returns (InventoryResponse);
+}
+
+message InventoryRequest{
+  int64 eventId = 1;
+  int32 totalSeats = 2;
+}
+
+message InventoryResponse{
+  bool seatBooked = 1;
+}

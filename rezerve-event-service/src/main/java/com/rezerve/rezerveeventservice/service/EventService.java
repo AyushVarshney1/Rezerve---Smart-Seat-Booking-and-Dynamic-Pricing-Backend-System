@@ -5,6 +5,7 @@ import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.response.AuthServiceGrpcResponseDto;
 import com.rezerve.rezerveeventservice.dto.response.EventResponseDto;
+import com.rezerve.rezerveeventservice.dto.response.EventServiceGrpcResponseDto;
 import com.rezerve.rezerveeventservice.exception.EventNotFoundException;
 import com.rezerve.rezerveeventservice.exception.UnauthorisedException;
 import com.rezerve.rezerveeventservice.grpc.AuthServiceGrpcClient;
@@ -85,5 +86,16 @@ public class EventService {
         }
 
         eventRepository.deleteById(eventId);
+    }
+
+    public EventServiceGrpcResponseDto getEventDetailsForBooking(Long eventId) {
+        if(!eventRepository.existsById(eventId)){
+            return eventMapper.toFailedEventServiceGrpcResponseDto();
+        }
+
+        Event event =  eventRepository.findById(eventId).get();
+
+        return eventMapper.toSuccessEventServiceGrpcResponseDto(event);
+
     }
 }

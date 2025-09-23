@@ -44,12 +44,6 @@ public class EventServiceGrpcClient {
                 throw new EventNotFoundException("Event with id : " + eventId + " not found");
             }
 
-            // ADD MESSAGE FIELD RECEIVED FROM EVENT-SERVICE BASED EXCEPTION HANDLING
-
-
-
-
-
             return bookingMapper.toEventServiceGrpcResponseDto(eventResponse);
 
         }catch (StatusRuntimeException e) {

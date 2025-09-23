@@ -2,10 +2,7 @@ package com.rezerve.rezerveeventservice.mapper;
 
 import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
-import com.rezerve.rezerveeventservice.dto.response.AuthServiceGrpcResponseDto;
-import com.rezerve.rezerveeventservice.dto.response.EventResponseDto;
-import com.rezerve.rezerveeventservice.dto.response.TravelEventResponseDto;
-import com.rezerve.rezerveeventservice.dto.response.VenueEventResponseDto;
+import com.rezerve.rezerveeventservice.dto.response.*;
 import com.rezerve.rezerveeventservice.model.Event;
 import org.springframework.stereotype.Component;
 import auth.AuthResponse;
@@ -80,5 +77,29 @@ public class EventMapper {
         event.setTotalSeats(venueEventRequestDto.getTotalSeats());
         event.setVenueLocation(venueEventRequestDto.getVenueLocation());
         return event;
+    }
+
+    public EventServiceGrpcResponseDto toFailedEventServiceGrpcResponseDto(){
+
+        EventServiceGrpcResponseDto eventServiceGrpcResponseDto = new EventServiceGrpcResponseDto();
+
+        eventServiceGrpcResponseDto.setExists(false);
+        eventServiceGrpcResponseDto.setMessage("EventNotFound");
+
+        return eventServiceGrpcResponseDto;
+
+    }
+
+    public EventServiceGrpcResponseDto toSuccessEventServiceGrpcResponseDto(Event event){
+
+        EventServiceGrpcResponseDto eventServiceGrpcResponseDto = new EventServiceGrpcResponseDto();
+
+        eventServiceGrpcResponseDto.setExists(true);
+        eventServiceGrpcResponseDto.setEventName(event.getName());
+        eventServiceGrpcResponseDto.setEventCategory(event.getCategory().toString());
+        eventServiceGrpcResponseDto.setPrice(event.getPrice());
+        eventServiceGrpcResponseDto.setMessage("EventFoundSuccessfully");
+
+        return eventServiceGrpcResponseDto;
     }
 }
