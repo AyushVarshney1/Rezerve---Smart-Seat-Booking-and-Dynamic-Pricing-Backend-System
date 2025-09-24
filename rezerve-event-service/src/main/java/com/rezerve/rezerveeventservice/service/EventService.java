@@ -9,6 +9,7 @@ import com.rezerve.rezerveeventservice.dto.response.EventServiceGrpcResponseDto;
 import com.rezerve.rezerveeventservice.exception.EventNotFoundException;
 import com.rezerve.rezerveeventservice.exception.UnauthorisedException;
 import com.rezerve.rezerveeventservice.grpc.AuthServiceGrpcClient;
+import com.rezerve.rezerveeventservice.kafka.EventKafkaProducer;
 import com.rezerve.rezerveeventservice.mapper.EventMapper;
 import com.rezerve.rezerveeventservice.model.Event;
 import com.rezerve.rezerveeventservice.repository.EventRepository;
@@ -27,6 +28,7 @@ public class EventService {
     private final EventMapper eventMapper;
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final CheckUpdateRequest checkUpdateRequest;
+    private final EventKafkaProducer eventKafkaProducer;
 
     public List<EventResponseDto> getAllEvents() {
         List<Event> events = eventRepository.findAll();
@@ -47,8 +49,11 @@ public class EventService {
         }
 
         Event event = eventMapper.toTravelEvent(travelEventRequestDto);
+        eventRepository.save(event);
 
-        return  eventMapper.toEventResponseDto(eventRepository.save(event));
+        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats()));
+
+        return  eventMapper.toEventResponseDto(event);
     }
 
     public EventResponseDto createVenueEvent(String token, VenueEventRequestDto venueEventRequestDto) {
@@ -58,8 +63,11 @@ public class EventService {
         }
 
         Event event = eventMapper.toVenueEvent(venueEventRequestDto);
+        eventRepository.save(event);
 
-        return  eventMapper.toEventResponseDto(eventRepository.save(event));
+        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats()));
+
+        return  eventMapper.toEventResponseDto(event);
     }
 
     public EventResponseDto updateEvent(String token, Long eventId, EventUpdateRequestDto eventUpdateRequestDto) {
@@ -71,8 +79,13 @@ public class EventService {
         Event oldEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " not found"));
 
         Event newEvent = checkUpdateRequest.isUpdateRequestValid(oldEvent, eventUpdateRequestDto);
+        eventRepository.save(newEvent);
 
-        return eventMapper.toEventResponseDto(eventRepository.save(newEvent));
+        if(eventUpdateRequestDto.getTotalSeats() != null){
+            eventKafkaProducer.sendEventSeatsUpdatedKafkaEvent(eventMapper.toEventProducerDto(newEvent.getId(), newEvent.getTotalSeats()));
+        }
+
+        return eventMapper.toEventResponseDto(newEvent);
     }
 
     public void deleteEvent(String token, Long eventId) {
@@ -86,6 +99,7 @@ public class EventService {
         }
 
         eventRepository.deleteById(eventId);
+        eventKafkaProducer.sendEventDeletedKafkaEvent(eventMapper.toEventProducerDto(eventId,null));
     }
 
     public EventServiceGrpcResponseDto getEventDetailsForBooking(Long eventId) {

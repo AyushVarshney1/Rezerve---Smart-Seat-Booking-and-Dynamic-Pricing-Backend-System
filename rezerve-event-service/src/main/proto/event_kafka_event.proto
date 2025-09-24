@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package event.events;
+option java_multiple_files = true;
+
+message EventCreatedKafkaEvent{
+  int64 eventId = 1;
+  int32 totalSeats = 2;
+}
+
+message EventSeatsUpdatedKafkaEvent{
+  int64 eventId = 1;
+  int32 totalSeats = 2;
+}
+
+message EventDeletedKafkaEvent{
+  int64 eventId = 1;
+}

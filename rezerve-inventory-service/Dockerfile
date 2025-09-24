@@ -14,9 +14,9 @@ FROM openjdk:22-jdk AS runner
 
 WORKDIR /app
 
-COPY --from=builder ./app/target/rezerve-event-service-0.0.1-SNAPSHOT.jar ./app.jar
+COPY --from=builder ./app/target/rezerve-inventory-service-0.0.1-SNAPSHOT.jar ./app.jar
 
-EXPOSE 6001
-EXPOSE 9002
+EXPOSE 6003
+EXPOSE 9003
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

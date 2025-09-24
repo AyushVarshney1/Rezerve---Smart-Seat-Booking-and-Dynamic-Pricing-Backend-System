@@ -26,6 +26,7 @@ services:
     restart: always
     depends_on:
       - rezerve-auth-service-db
+      - rezerve-kafka
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-auth-service-db:5432/rezerve-auth-db
       SPRING_DATASOURCE_USERNAME: admin-rezerve
@@ -33,6 +34,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       JWT_SECRET: 6E141C5D561C2ACC14E87A271158EAB44C1F5E6734B98A27D12CF0348F1B2C9E
       SPRING_SQL_INIT_MODE: always
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
     ports:
       - "6000:6000"
       - "9001:9001"
@@ -62,6 +64,7 @@ services:
     restart: always
     depends_on:
       - rezerve-event-service-db
+      - rezerve-kafka
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-event-service-db:5432/rezerve-event-db
       SPRING_DATASOURCE_USERNAME: admin-rezerve
@@ -70,8 +73,28 @@ services:
       SPRING_SQL_INIT_MODE: always
       AUTH_SERVICE_ADDRESS: rezerve-auth-service
       AUTH_SERVICE_GRPC_PORT: 9001
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
     ports:
       - "6001:6001"
+      - "9002:9002"
+    networks:
+      - rezerve
+
+  rezerve-kafka:
+    image: bitnami/kafka:4.0
+    container_name: rezerve_kafka
+    restart: always
+    environment:
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://rezerve-kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@rezerve-kafka:9093
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+    ports:
+      - "9092:9092"
+      - "9094:9094"
     networks:
       - rezerve
 

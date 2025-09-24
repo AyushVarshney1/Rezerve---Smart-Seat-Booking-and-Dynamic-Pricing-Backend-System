@@ -1,5 +1,6 @@
 package com.rezerve.rezerveeventservice.mapper;
 
+import com.rezerve.rezerveeventservice.dto.request.EventProducerDto;
 import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.response.*;
@@ -101,5 +102,17 @@ public class EventMapper {
         eventServiceGrpcResponseDto.setMessage("EventFoundSuccessfully");
 
         return eventServiceGrpcResponseDto;
+    }
+
+    public EventProducerDto toEventProducerDto(Long eventId, Integer totalSeats){
+
+        EventProducerDto eventProducerDto = new EventProducerDto();
+
+        eventProducerDto.setEventId(eventId);
+        if(totalSeats != null){
+            eventProducerDto.setTotalSeats(totalSeats);
+        }
+
+        return eventProducerDto;
     }
 }
