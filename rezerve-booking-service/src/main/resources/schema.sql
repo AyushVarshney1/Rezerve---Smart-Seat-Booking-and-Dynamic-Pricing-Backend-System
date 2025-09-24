@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS bookings (
     total_price DOUBLE PRECISION NOT NULL,
     booking_status booking_status_type NOT NULL,
     created_date TIMESTAMP NOT NULL
-)
+);

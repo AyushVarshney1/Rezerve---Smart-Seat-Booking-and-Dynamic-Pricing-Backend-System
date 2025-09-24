@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS inventory(
-    id BIGSERIAL PRIMARY KEY SERIAL,
+    id BIGSERIAL PRIMARY KEY,
     event_id BIGINT UNIQUE NOT NULL,
     total_seats INTEGER NOT NULL,
     available_seats INTEGER NOT NULL
-)
+);

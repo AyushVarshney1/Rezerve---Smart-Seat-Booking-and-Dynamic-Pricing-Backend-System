@@ -63,6 +63,7 @@ public class InventoryService {
         inventoryRepository.save(inventory);
     }
 
+    @Transactional
     public void deleteInventory(InventoryEventConsumerDto inventoryEventConsumerDto){
         if(inventoryRepository.findByEventId(inventoryEventConsumerDto.getEventId()).isEmpty()){
             throw new EventNotFoundException("Event with id: " + inventoryEventConsumerDto.getEventId() + " not found");

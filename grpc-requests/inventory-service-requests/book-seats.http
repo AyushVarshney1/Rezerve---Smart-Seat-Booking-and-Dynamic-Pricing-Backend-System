@@ -1,0 +1,6 @@
+GRPC localhost:9003/InventoryService/BookSeats
+
+{
+  "eventId" : 8,
+  "totalSeats" : 50
+}

@@ -98,7 +98,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!--IF DATASOURCE ERROR WHEN IMAGE BUILDS (mvn clean package error in dockerfile), add H2-->
+<!--        IF DATASOURCE ERROR WHEN IMAGE BUILDS (mvn clean package error in dockerfile), add H2-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
