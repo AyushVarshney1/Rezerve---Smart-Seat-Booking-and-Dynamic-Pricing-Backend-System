@@ -17,6 +17,6 @@ WORKDIR /app
 COPY --from=builder ./app/target/rezerve-inventory-service-0.0.1-SNAPSHOT.jar ./app.jar
 
 EXPOSE 6003
-EXPOSE 9003
+EXPOSE 9004
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

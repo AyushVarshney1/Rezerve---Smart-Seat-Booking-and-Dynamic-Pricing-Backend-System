@@ -131,6 +131,49 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
     ports:
       - "6003:6003"
+      - "9004:9004"
+    networks:
+      - rezerve
+
+  rezerve-booking-service-db:
+    image: postgres:15
+    container_name: rezerve_booking_service_db
+    restart: always
+    environment:
+      POSTGRES_DB: rezerve-booking-db
+      POSTGRES_USER: admin-rezerve
+      POSTGRES_PASSWORD: password-rezerve
+    ports:
+      - "8002:5432"
+    volumes:
+      - booking_postgres_data:/var/lib/postgresql/data
+    networks:
+      - rezerve
+
+# ADD KAFKA DEPENDS ON & ENV VARIABLE FOR KAFKA IN BOOKING SERVICE
+
+  rezerve-booking-service:
+    build:
+      context: ./rezerve-booking-service
+      dockerfile: Dockerfile
+    container_name: rezerve_booking_service
+    restart: always
+    depends_on:
+      - rezerve-booking-service-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-booking-service-db:5432/rezerve-booking-db
+      SPRING_DATASOURCE_USERNAME: admin-rezerve
+      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SQL_INIT_MODE: always
+      AUTH_SERVICE_ADDRESS: rezerve-auth-service
+      AUTH_SERVICE_GRPC_PORT: 9001
+      EVENT_SERVICE_ADDRESS: rezerve-event-service
+      EVENT_SERVICE_GRPC_PORT: 9002
+      INVENTORY_SERVICE_ADDRESS: rezerve-inventory-service
+      INVENTORY_SERVICE_GRPC_PORT: 9004
+    ports:
+      - "6002:6002"
       - "9003:9003"
     networks:
       - rezerve
@@ -139,3 +182,4 @@ volumes:
   auth_postgres_data:
   event_postgres_data:
   inventory_postgres_data:
+  booking_postgres_data:

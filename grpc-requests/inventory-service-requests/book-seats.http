@@ -1,4 +1,4 @@
-GRPC localhost:9003/InventoryService/BookSeats
+GRPC localhost:9004/InventoryService/BookSeats
 
 {
   "eventId" : 8,

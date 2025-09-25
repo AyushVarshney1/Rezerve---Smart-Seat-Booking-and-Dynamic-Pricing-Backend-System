@@ -8,12 +8,14 @@ import com.rezerve.rezervebookingservice.grpc.EventServiceGrpcClient;
 import com.rezerve.rezervebookingservice.grpc.InventoryServiceGrpcClient;
 import com.rezerve.rezervebookingservice.mapper.BookingMapper;
 import com.rezerve.rezervebookingservice.model.Booking;
+import com.rezerve.rezervebookingservice.model.enums.BookingStatus;
 import com.rezerve.rezervebookingservice.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -76,5 +78,26 @@ public class BookingService {
         }
 
         throw new RuntimeException("Failed to create booking after retries due to UUID collision");
+    }
+
+    public BookingGrpcResponseDto checkBooking(UUID bookingId){
+        Optional<Booking> optionalBooking = bookingRepository.findByBookingId(bookingId);
+
+        if(optionalBooking.isEmpty()){
+            return bookingMapper.toBookingGrpcResponseDto("BookingNotFound",null);
+        }
+
+        Booking booking = optionalBooking.get();
+
+        if(booking.getBookingStatus().equals(BookingStatus.CANCELLED)){
+            return bookingMapper.toBookingGrpcResponseDto("BookingExpired",null);
+        }
+
+        if(booking.getBookingStatus().equals(BookingStatus.CONFIRMED)){
+            return bookingMapper.toBookingGrpcResponseDto("BookingAlreadyConfirmed",null);
+        }
+
+        return bookingMapper.toBookingGrpcResponseDto("BookingFound", booking.getTotalPrice());
+
     }
 }

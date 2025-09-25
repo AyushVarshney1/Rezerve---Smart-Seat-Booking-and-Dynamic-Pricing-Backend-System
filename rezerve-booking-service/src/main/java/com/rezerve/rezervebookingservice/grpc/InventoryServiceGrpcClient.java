@@ -19,7 +19,7 @@ public class InventoryServiceGrpcClient {
     private static final Logger log = LoggerFactory.getLogger(InventoryServiceGrpcClient.class.getName());
     private final InventoryServiceGrpc.InventoryServiceBlockingStub blockingStub;
 
-    public InventoryServiceGrpcClient(@Value("${inventory.service.address:localhost}") String serverAddress, @Value("${inventory.service.grpc.port:9003}") int serverPort) {
+    public InventoryServiceGrpcClient(@Value("${inventory.service.address:localhost}") String serverAddress, @Value("${inventory.service.grpc.port:9004}") int serverPort) {
 
         log.info("Connecting to Inventory service GRPC service at {}:{}", serverAddress, serverPort);
 

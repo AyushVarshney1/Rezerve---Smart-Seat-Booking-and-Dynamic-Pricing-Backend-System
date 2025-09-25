@@ -79,4 +79,18 @@ public class BookingMapper {
 
         return bookingUserResponseDto;
     }
+
+    public BookingGrpcResponseDto toBookingGrpcResponseDto(String message, Double totalPrice){
+
+        BookingGrpcResponseDto bookingGrpcResponseDto = new BookingGrpcResponseDto();
+
+        bookingGrpcResponseDto.setExists(message.equals("BookingFound"));
+        bookingGrpcResponseDto.setMessage(message);
+
+        if(totalPrice != null){
+            bookingGrpcResponseDto.setTotalPrice(totalPrice);
+        }
+
+        return bookingGrpcResponseDto;
+    }
 }
