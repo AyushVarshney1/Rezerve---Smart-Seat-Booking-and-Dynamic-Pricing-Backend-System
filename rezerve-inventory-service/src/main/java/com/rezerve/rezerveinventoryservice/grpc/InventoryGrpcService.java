@@ -1,5 +1,6 @@
 package com.rezerve.rezerveinventoryservice.grpc;
 
+import com.rezerve.rezerveinventoryservice.dto.InventoryGrpcResponseDto;
 import com.rezerve.rezerveinventoryservice.service.InventoryService;
 import inventory.InventoryRequest;
 import inventory.InventoryResponse;
@@ -19,13 +20,14 @@ public class InventoryGrpcService extends inventory.InventoryServiceGrpc.Invento
 
     @Override
     public void bookSeats(InventoryRequest inventoryRequest, StreamObserver<InventoryResponse> responseObserver){
-        log.info("BookSeats request recieved: {}", inventoryRequest);
+        log.info("BookSeats request received: {}", inventoryRequest);
 
         try{
-            boolean seatsBooked = inventoryService.bookSeats(inventoryRequest.getEventId(), inventoryRequest.getTotalSeats());
+            InventoryGrpcResponseDto seatsBooked = inventoryService.bookSeats(inventoryRequest.getEventId(), inventoryRequest.getTotalSeats());
 
             InventoryResponse inventoryResponse = InventoryResponse.newBuilder()
-                    .setSeatBooked(seatsBooked)
+                    .setSeatBooked(seatsBooked.getSeatBooked())
+                    .setMessage(seatsBooked.getMessage())
                     .build();
 
             responseObserver.onNext(inventoryResponse);

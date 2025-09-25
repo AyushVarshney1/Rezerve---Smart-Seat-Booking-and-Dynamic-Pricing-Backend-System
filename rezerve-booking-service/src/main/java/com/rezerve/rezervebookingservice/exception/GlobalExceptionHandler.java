@@ -38,8 +38,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(EventSoldOutException.class)
-    public ResponseEntity<String> handleEventSoldOutException(EventSoldOutException ex){
+    @ExceptionHandler(EventNotBookedException.class)
+    public ResponseEntity<String> handleEventNotBookedException(EventNotBookedException ex){
         return ResponseEntity.unprocessableEntity().body(ex.getMessage());
     }
 }

@@ -1,7 +1,8 @@
 package com.rezerve.rezervebookingservice.grpc;
 
+import com.rezerve.rezervebookingservice.exception.EventNotFoundException;
 import com.rezerve.rezervebookingservice.exception.GrpcServerException;
-import com.rezerve.rezervebookingservice.exception.EventSoldOutException;
+import com.rezerve.rezervebookingservice.exception.EventNotBookedException;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -40,8 +41,18 @@ public class InventoryServiceGrpcClient {
             log.info("Received response from Inventory service via GRPC: {}", inventoryResponse);
 
             if(!inventoryResponse.getSeatBooked()){
-                throw new EventSoldOutException("Event with id : " + eventId + " is completely booked");
+                if(inventoryResponse.getMessage().equals("EventNotFoundInInventory")){
+                    throw new EventNotFoundException("Event with id: " +  eventId + " not found");
+                }
+                else if(inventoryResponse.getMessage().equals("NotEnoughAvailableSeats")){
+                    throw new EventNotBookedException("Not enough available seats");
+                }
+                else if(inventoryResponse.getMessage().equals("EventFullyBooked")){
+                    throw new EventNotBookedException("Event has been fully booked");
+                }
             }
+
+
 
         }catch (StatusRuntimeException e) {
 

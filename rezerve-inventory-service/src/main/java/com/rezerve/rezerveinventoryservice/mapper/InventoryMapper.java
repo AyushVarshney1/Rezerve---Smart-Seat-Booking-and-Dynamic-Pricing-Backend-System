@@ -1,6 +1,7 @@
 package com.rezerve.rezerveinventoryservice.mapper;
 
 import com.rezerve.rezerveinventoryservice.dto.InventoryEventConsumerDto;
+import com.rezerve.rezerveinventoryservice.dto.InventoryGrpcResponseDto;
 import event.events.EventCreatedKafkaEvent;
 import event.events.EventDeletedKafkaEvent;
 import event.events.EventSeatsUpdatedKafkaEvent;
@@ -29,5 +30,15 @@ public class InventoryMapper {
                 event.getEventId(),
                 null
         );
+    }
+
+    public InventoryGrpcResponseDto toInventoryGrpcResponseDto(Boolean seatBooked, String message) {
+
+        InventoryGrpcResponseDto inventoryGrpcResponseDto = new InventoryGrpcResponseDto();
+
+        inventoryGrpcResponseDto.setSeatBooked(seatBooked);
+        inventoryGrpcResponseDto.setMessage(message);
+
+        return inventoryGrpcResponseDto;
     }
 }

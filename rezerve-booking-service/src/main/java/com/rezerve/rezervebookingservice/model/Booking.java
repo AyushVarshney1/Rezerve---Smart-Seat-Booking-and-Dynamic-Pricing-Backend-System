@@ -50,11 +50,4 @@ public class Booking {
 
     @CreatedDate
     private LocalDateTime createdDate;
-
-    @PrePersist
-    public void generateBookingId() {
-        if (bookingId == null) {
-            bookingId = UUID.randomUUID();
-        }
-    }
 }
