@@ -2,6 +2,7 @@ package com.rezerve.rezervepaymentservice.controller;
 
 import com.rezerve.rezervepaymentservice.dto.PaymentRequestDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDto;
+import com.rezerve.rezervepaymentservice.dto.PaymentResponseDtoForUser;
 import com.rezerve.rezervepaymentservice.exception.InvalidHeaderException;
 import com.rezerve.rezervepaymentservice.service.PaymentService;
 import jakarta.validation.Valid;
@@ -49,15 +50,15 @@ public class PaymentController {
 
     // CREATE PAYMENT (COMPLETE BOOKING PROCESS)
     @PostMapping
-    public ResponseEntity<PaymentResponseDto> createPayment(@RequestHeader("Authorization") String header, @Valid @RequestBody PaymentRequestDto paymentRequestDto){
+    public ResponseEntity<PaymentResponseDtoForUser> createPayment(@RequestHeader("Authorization") String header, @Valid @RequestBody PaymentRequestDto paymentRequestDto){
         if(header == null || !header.startsWith("Bearer ")){
             throw new InvalidHeaderException("Authorization header is invalid");
         }
 
         String token =  header.substring(7);
 
-        PaymentResponseDto paymentResponseDto = paymentService.createPayment(token,paymentRequestDto);
+        PaymentResponseDtoForUser paymentResponseDtoForUser = paymentService.createPayment(token,paymentRequestDto);
 
-        return ResponseEntity.ok(paymentResponseDto);
+        return ResponseEntity.ok(paymentResponseDtoForUser);
     }
 }

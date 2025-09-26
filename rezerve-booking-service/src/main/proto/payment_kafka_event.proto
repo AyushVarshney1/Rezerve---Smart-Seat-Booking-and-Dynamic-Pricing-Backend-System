@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package payment.events;
+option java_multiple_files = true;
+
+message PaymentSuccessfulKafkaEvent{
+  string bookingId = 1;
+}

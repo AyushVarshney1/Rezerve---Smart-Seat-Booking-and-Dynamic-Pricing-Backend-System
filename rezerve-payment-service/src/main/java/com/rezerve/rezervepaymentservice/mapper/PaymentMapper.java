@@ -4,6 +4,7 @@ import auth.AuthResponse;
 import com.rezerve.rezervepaymentservice.dto.AuthServiceGrpcResponseDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentRequestDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDto;
+import com.rezerve.rezervepaymentservice.dto.PaymentResponseDtoForUser;
 import com.rezerve.rezervepaymentservice.model.Payment;
 import com.rezerve.rezervepaymentservice.model.enums.PaymentStatus;
 import org.springframework.stereotype.Component;
@@ -40,17 +41,17 @@ public class PaymentMapper {
         return paymentResponseDto;
     }
 
-    public PaymentResponseDto toPaymentResponseDtoForUser(Payment payment) {
+    public PaymentResponseDtoForUser toPaymentResponseDtoForUser(Payment payment) {
 
-        PaymentResponseDto paymentResponseDto = new PaymentResponseDto();
+        PaymentResponseDtoForUser paymentResponseDtoForUser = new PaymentResponseDtoForUser();
 
-        paymentResponseDto.setPaymentId(payment.getPaymentId());
-        paymentResponseDto.setAmount(payment.getAmount());
-        paymentResponseDto.setPaymentStatus(payment.getPaymentStatus());
-        paymentResponseDto.setBookingId(payment.getBookingId());
-        paymentResponseDto.setCreatedDate(payment.getCreatedDate());
+        paymentResponseDtoForUser.setPaymentId(payment.getPaymentId());
+        paymentResponseDtoForUser.setAmount(payment.getAmount());
+        paymentResponseDtoForUser.setPaymentStatus(payment.getPaymentStatus());
+        paymentResponseDtoForUser.setBookingId(payment.getBookingId());
+        paymentResponseDtoForUser.setCreatedDate(payment.getCreatedDate());
 
-        return paymentResponseDto;
+        return paymentResponseDtoForUser;
     }
 
     public Payment toPayment(PaymentRequestDto paymentRequestDto, Long userId) {

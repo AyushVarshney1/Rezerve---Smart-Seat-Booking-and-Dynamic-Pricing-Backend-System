@@ -3,11 +3,13 @@ package com.rezerve.rezervepaymentservice.service;
 import com.rezerve.rezervepaymentservice.dto.AuthServiceGrpcResponseDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentRequestDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDto;
+import com.rezerve.rezervepaymentservice.dto.PaymentResponseDtoForUser;
 import com.rezerve.rezervepaymentservice.exception.InvalidPaymentAmountException;
 import com.rezerve.rezervepaymentservice.exception.PaymentNotFoundException;
 import com.rezerve.rezervepaymentservice.exception.UnauthorisedException;
 import com.rezerve.rezervepaymentservice.grpc.AuthServiceGrpcClient;
 import com.rezerve.rezervepaymentservice.grpc.BookingServiceGrpcClient;
+import com.rezerve.rezervepaymentservice.kafka.PaymentKafkaProducer;
 import com.rezerve.rezervepaymentservice.mapper.PaymentMapper;
 import com.rezerve.rezervepaymentservice.model.Payment;
 import com.rezerve.rezervepaymentservice.model.enums.PaymentStatus;
@@ -27,6 +29,7 @@ public class PaymentService {
     private final BookingServiceGrpcClient bookingServiceGrpcClient;
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final PaymentMapper paymentMapper;
+    private final PaymentKafkaProducer paymentKafkaProducer;
 
     public List<PaymentResponseDto> getAllPayments(String token){
         AuthServiceGrpcResponseDto  authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
@@ -52,7 +55,7 @@ public class PaymentService {
         return paymentMapper.toPaymentResponseDto(payment);
     }
 
-    public PaymentResponseDto createPayment(String token, PaymentRequestDto paymentRequestDto){
+    public PaymentResponseDtoForUser createPayment(String token, PaymentRequestDto paymentRequestDto){
         AuthServiceGrpcResponseDto  authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
 
         double totalAmountToBePaid = bookingServiceGrpcClient.checkBooking(paymentRequestDto.getBookingId());
@@ -76,7 +79,10 @@ public class PaymentService {
         }
 
         payment.setPaymentStatus(PaymentStatus.SUCCESSFUL);
+        Payment savedPayment = paymentRepository.save(payment);
 
-        return paymentMapper.toPaymentResponseDtoForUser(paymentRepository.save(payment));
+        paymentKafkaProducer.sendPaymentSuccessfulKafkaEvent(savedPayment.getBookingId());
+
+        return paymentMapper.toPaymentResponseDtoForUser(savedPayment);
     }
 }
