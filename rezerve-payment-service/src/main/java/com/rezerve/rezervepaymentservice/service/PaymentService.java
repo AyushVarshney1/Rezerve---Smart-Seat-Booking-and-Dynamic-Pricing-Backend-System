@@ -1,13 +1,16 @@
 package com.rezerve.rezervepaymentservice.service;
 
 import com.rezerve.rezervepaymentservice.dto.AuthServiceGrpcResponseDto;
+import com.rezerve.rezervepaymentservice.dto.PaymentRequestDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDto;
+import com.rezerve.rezervepaymentservice.exception.InvalidPaymentAmountException;
 import com.rezerve.rezervepaymentservice.exception.PaymentNotFoundException;
 import com.rezerve.rezervepaymentservice.exception.UnauthorisedException;
 import com.rezerve.rezervepaymentservice.grpc.AuthServiceGrpcClient;
 import com.rezerve.rezervepaymentservice.grpc.BookingServiceGrpcClient;
 import com.rezerve.rezervepaymentservice.mapper.PaymentMapper;
 import com.rezerve.rezervepaymentservice.model.Payment;
+import com.rezerve.rezervepaymentservice.model.enums.PaymentStatus;
 import com.rezerve.rezervepaymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,5 +50,33 @@ public class PaymentService {
         Payment payment = paymentRepository.findByPaymentId(paymentId).orElseThrow(() -> new PaymentNotFoundException("Payment with id: " + paymentId + " not found"));
 
         return paymentMapper.toPaymentResponseDto(payment);
+    }
+
+    public PaymentResponseDto createPayment(String token, PaymentRequestDto paymentRequestDto){
+        AuthServiceGrpcResponseDto  authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
+
+        double totalAmountToBePaid = bookingServiceGrpcClient.checkBooking(paymentRequestDto.getBookingId());
+
+        Payment payment = paymentMapper.toPayment(paymentRequestDto,authServiceGrpcResponseDto.getUserId());
+
+        double amountSent = paymentRequestDto.getAmount();
+
+        if(totalAmountToBePaid < amountSent){
+            payment.setPaymentStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+            throw new InvalidPaymentAmountException("Amount sent: " + amountSent + " is less than total " +
+                    "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
+        }
+
+        if(totalAmountToBePaid > amountSent){
+            payment.setPaymentStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+            throw new InvalidPaymentAmountException("Amount sent: " + amountSent + " is more than total " +
+                    "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
+        }
+
+        payment.setPaymentStatus(PaymentStatus.SUCCESSFUL);
+
+        return paymentMapper.toPaymentResponseDtoForUser(paymentRepository.save(payment));
     }
 }

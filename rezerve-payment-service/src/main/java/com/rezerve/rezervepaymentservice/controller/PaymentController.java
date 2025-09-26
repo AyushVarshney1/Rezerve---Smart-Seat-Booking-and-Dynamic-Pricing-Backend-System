@@ -1,8 +1,10 @@
 package com.rezerve.rezervepaymentservice.controller;
 
+import com.rezerve.rezervepaymentservice.dto.PaymentRequestDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDto;
 import com.rezerve.rezervepaymentservice.exception.InvalidHeaderException;
 import com.rezerve.rezervepaymentservice.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,20 @@ public class PaymentController {
         String token =  header.substring(7);
 
         PaymentResponseDto paymentResponseDto = paymentService.getPaymentById(token,paymentId);
+
+        return ResponseEntity.ok(paymentResponseDto);
+    }
+
+    // CREATE PAYMENT (COMPLETE BOOKING PROCESS)
+    @PostMapping
+    public ResponseEntity<PaymentResponseDto> createPayment(@RequestHeader("Authorization") String header, @Valid @RequestBody PaymentRequestDto paymentRequestDto){
+        if(header == null || !header.startsWith("Bearer ")){
+            throw new InvalidHeaderException("Authorization header is invalid");
+        }
+
+        String token =  header.substring(7);
+
+        PaymentResponseDto paymentResponseDto = paymentService.createPayment(token,paymentRequestDto);
 
         return ResponseEntity.ok(paymentResponseDto);
     }

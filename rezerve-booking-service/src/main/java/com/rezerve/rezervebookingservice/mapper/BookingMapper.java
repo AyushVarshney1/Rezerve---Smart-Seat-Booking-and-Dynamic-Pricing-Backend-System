@@ -8,6 +8,8 @@ import com.rezerve.rezervebookingservice.model.enums.EventCategory;
 import event.EventResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class BookingMapper {
 
@@ -62,6 +64,7 @@ public class BookingMapper {
         booking.setTotalTickets(bookingRequestDto.getTotalTickets());
         booking.setTotalPrice(bookingRequestDto.getTotalTickets() * eventServiceGrpcResponseDto.getPrice());
         booking.setBookingStatus(BookingStatus.PENDING);
+        booking.setBookingId(UUID.randomUUID());
 
         return booking;
     }

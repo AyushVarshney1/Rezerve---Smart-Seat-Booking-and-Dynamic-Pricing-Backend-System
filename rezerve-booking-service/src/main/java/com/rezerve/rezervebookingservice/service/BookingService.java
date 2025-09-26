@@ -11,7 +11,6 @@ import com.rezerve.rezervebookingservice.model.Booking;
 import com.rezerve.rezervebookingservice.model.enums.BookingStatus;
 import com.rezerve.rezervebookingservice.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,21 +62,8 @@ public class BookingService {
 
         Booking booking = bookingMapper.toBooking(bookingRequestDto,authServiceGrpcResponseDto,eventServiceGrpcResponseDto);
 
-        int retries = 3;
-        while(retries-- > 0){
-            try{
-                if(booking.getBookingId() == null){
-                    booking.setBookingId(UUID.randomUUID());
-                }
-                bookingRepository.save(booking);
-                return bookingMapper.toBookingUserResponseDto(booking);
-
-            }catch (DataIntegrityViolationException e) {
-                booking.setBookingId(UUID.randomUUID());
-            }
-        }
-
-        throw new RuntimeException("Failed to create booking after retries due to UUID collision");
+        bookingRepository.save(booking);
+        return bookingMapper.toBookingUserResponseDto(booking);
     }
 
     public BookingGrpcResponseDto checkBooking(UUID bookingId){
