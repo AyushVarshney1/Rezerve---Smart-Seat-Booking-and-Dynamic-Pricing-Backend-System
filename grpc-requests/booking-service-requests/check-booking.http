@@ -1,0 +1,5 @@
+GRPC localhost:9003/BookingService/CheckBooking
+
+{
+  "bookingId" : "cb359217-9a5f-4260-af76-3220c354c235"
+}
