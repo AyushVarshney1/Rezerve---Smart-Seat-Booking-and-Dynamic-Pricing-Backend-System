@@ -92,6 +92,12 @@
             <version>4.29.1</version>
         </dependency>
 
+        <!-- Core Spring Kafka support -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
 
     </dependencies>
 

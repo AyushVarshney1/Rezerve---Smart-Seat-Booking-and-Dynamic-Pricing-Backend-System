@@ -160,6 +160,7 @@ services:
     restart: always
     depends_on:
       - rezerve-booking-service-db
+      - rezerve-kafka
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-booking-service-db:5432/rezerve-booking-db
       SPRING_DATASOURCE_USERNAME: admin-rezerve
@@ -172,6 +173,7 @@ services:
       EVENT_SERVICE_GRPC_PORT: 9002
       INVENTORY_SERVICE_ADDRESS: rezerve-inventory-service
       INVENTORY_SERVICE_GRPC_PORT: 9004
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
     ports:
       - "6002:6002"
       - "9003:9003"

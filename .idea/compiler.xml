@@ -7,18 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rezerve-inventory-service" />
+        <module name="rezerve-booking-service" />
         <module name="rezerve-auth-service" />
         <module name="rezerve-event-service" />
         <module name="rezerve-payment-service" />
-      </profile>
-      <profile name="Annotation profile for rezerve-booking-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-        </processorPath>
-        <module name="rezerve-booking-service" />
       </profile>
     </annotationProcessing>
   </component>

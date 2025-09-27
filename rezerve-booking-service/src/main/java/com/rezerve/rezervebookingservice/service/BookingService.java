@@ -84,6 +84,19 @@ public class BookingService {
         }
 
         return bookingMapper.toBookingGrpcResponseDto("BookingFound", booking.getTotalPrice());
+    }
 
+    public void completeBooking(UUID bookingId){
+        Optional<Booking> optionalBooking = bookingRepository.findByBookingId(bookingId);
+
+        if(optionalBooking.isEmpty()){
+            throw new BookingNotFoundException("Booking with id: " + bookingId + " not found");
+        }
+
+        Booking booking = optionalBooking.get();
+
+        booking.setBookingStatus(BookingStatus.CONFIRMED);
+
+        bookingRepository.save(booking);
     }
 }

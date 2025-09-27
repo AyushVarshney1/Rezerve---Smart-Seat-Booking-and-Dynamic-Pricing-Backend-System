@@ -27,7 +27,7 @@ public class PaymentKafkaProducer {
             kafkaTemplate.send("payment.successful.topic.v1",bytes);
             log.info("Sent payment successful to topic");
         }catch (Exception e){
-            log.error("Error in PaymentSuccessfulKafkaEvent sending sendPaymentSuccessfulKafkaEvent");
+            log.error("Error in PaymentSuccessfulKafkaEvent sending sendPaymentSuccessfulKafkaEvent: {}", e.getMessage());
         }
     }
 }

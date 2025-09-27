@@ -64,14 +64,14 @@ public class PaymentService {
 
         double amountSent = paymentRequestDto.getAmount();
 
-        if(totalAmountToBePaid < amountSent){
+        if(totalAmountToBePaid > amountSent){
             payment.setPaymentStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
             throw new InvalidPaymentAmountException("Amount sent: " + amountSent + " is less than total " +
                     "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
         }
 
-        if(totalAmountToBePaid > amountSent){
+        if(totalAmountToBePaid < amountSent){
             payment.setPaymentStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
             throw new InvalidPaymentAmountException("Amount sent: " + amountSent + " is more than total " +

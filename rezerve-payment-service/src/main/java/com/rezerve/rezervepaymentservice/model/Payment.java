@@ -24,7 +24,7 @@ public class Payment {
     @Column(unique = true, nullable = false, updatable = false)
     private UUID paymentId;
 
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private UUID bookingId;
 
     @Column(nullable = false, updatable = false)
