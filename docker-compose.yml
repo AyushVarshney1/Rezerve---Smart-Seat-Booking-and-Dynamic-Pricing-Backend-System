@@ -56,6 +56,17 @@ services:
     networks:
       - rezerve
 
+  rezerve-event-service-redis:
+    image: redis:7
+    container_name: rezerve_event_service_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - event-service-redis-data:/data
+    networks:
+      - rezerve
+
   rezerve-event-service:
     build:
       context: ./rezerve-event-service
@@ -65,6 +76,7 @@ services:
     depends_on:
       - rezerve-event-service-db
       - rezerve-kafka
+      - rezerve-event-service-redis
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-event-service-db:5432/rezerve-event-db
       SPRING_DATASOURCE_USERNAME: admin-rezerve
@@ -74,6 +86,8 @@ services:
       AUTH_SERVICE_ADDRESS: rezerve-auth-service
       AUTH_SERVICE_GRPC_PORT: 9001
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+      EVENT_SERVICE_REDIS_HOST: rezerve-event-service-redis
+      EVENT_SERVICE_REDIS_PORT: 6379
     ports:
       - "6001:6001"
       - "9002:9002"
@@ -227,3 +241,4 @@ volumes:
   inventory_postgres_data:
   booking_postgres_data:
   payment_postgres_data:
+  event-service-redis-data:

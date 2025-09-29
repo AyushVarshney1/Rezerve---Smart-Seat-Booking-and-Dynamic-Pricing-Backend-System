@@ -32,7 +32,7 @@ public class EventController {
 
     // RETURN SINGLE EVENT BY ID
     @GetMapping("/{event-id}")
-    public ResponseEntity<EventResponseDto> getEventById(@PathVariable("event-id") String eventId){
+    public ResponseEntity<EventResponseDto> getEventById(@PathVariable("event-id") Long eventId){
         EventResponseDto eventResponseDto = eventService.getEventById(eventId);
         return ResponseEntity.ok(eventResponseDto);
     }

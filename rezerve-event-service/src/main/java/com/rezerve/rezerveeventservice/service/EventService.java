@@ -15,6 +15,8 @@ import com.rezerve.rezerveeventservice.model.Event;
 import com.rezerve.rezerveeventservice.repository.EventRepository;
 import com.rezerve.rezerveeventservice.util.CheckUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +31,7 @@ public class EventService {
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final CheckUpdateRequest checkUpdateRequest;
     private final EventKafkaProducer eventKafkaProducer;
+    private final EventCacheableService eventCacheableService;
 
     public List<EventResponseDto> getAllEvents() {
         List<Event> events = eventRepository.findAll();
@@ -36,8 +39,8 @@ public class EventService {
         return events.stream().map(eventMapper::toEventResponseDto).collect(Collectors.toList());
     }
 
-    public EventResponseDto getEventById(String eventId) {
-        Event event = eventRepository.findById(Long.parseLong(eventId)).orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " not found"));
+    public EventResponseDto getEventById(Long eventId) {
+        Event event = eventCacheableService.getEventEntityById(eventId);
 
         return eventMapper.toEventResponseDto(event);
     }
@@ -70,24 +73,29 @@ public class EventService {
         return  eventMapper.toEventResponseDto(event);
     }
 
+    @CachePut(value = "events", key = "#eventId")
     public EventResponseDto updateEvent(String token, Long eventId, EventUpdateRequestDto eventUpdateRequestDto) {
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
         if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
             throw new UnauthorisedException("Only admins can update event");
         }
 
-        Event oldEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " not found"));
+        Event oldEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " not found"));
 
         Event newEvent = checkUpdateRequest.isUpdateRequestValid(oldEvent, eventUpdateRequestDto);
         eventRepository.save(newEvent);
 
         if(eventUpdateRequestDto.getTotalSeats() != null){
-            eventKafkaProducer.sendEventSeatsUpdatedKafkaEvent(eventMapper.toEventProducerDto(newEvent.getId(), newEvent.getTotalSeats()));
+            eventKafkaProducer.sendEventSeatsUpdatedKafkaEvent(
+                    eventMapper.toEventProducerDto(newEvent.getId(), newEvent.getTotalSeats())
+            );
         }
 
         return eventMapper.toEventResponseDto(newEvent);
     }
 
+    @CacheEvict(value = "events", key = "#eventId")
     public void deleteEvent(String token, Long eventId) {
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
         if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
@@ -95,21 +103,22 @@ public class EventService {
         }
 
         if(eventRepository.findById(eventId).isEmpty()){
-            throw new  EventNotFoundException("Event with id: " + eventId + " not found");
+            throw new EventNotFoundException("Event with id: " + eventId + " not found");
         }
 
         eventRepository.deleteById(eventId);
-        eventKafkaProducer.sendEventDeletedKafkaEvent(eventMapper.toEventProducerDto(eventId,null));
+        eventKafkaProducer.sendEventDeletedKafkaEvent(
+                eventMapper.toEventProducerDto(eventId, null)
+        );
     }
 
     public EventServiceGrpcResponseDto getEventDetailsForBooking(Long eventId) {
-        if(!eventRepository.existsById(eventId)){
+        try {
+            Event event = eventCacheableService.getEventEntityById(eventId);
+            return eventMapper.toSuccessEventServiceGrpcResponseDto(event);
+        } catch (EventNotFoundException e) {
             return eventMapper.toFailedEventServiceGrpcResponseDto();
         }
-
-        Event event =  eventRepository.findById(eventId).get();
-
-        return eventMapper.toSuccessEventServiceGrpcResponseDto(event);
-
     }
+
 }
