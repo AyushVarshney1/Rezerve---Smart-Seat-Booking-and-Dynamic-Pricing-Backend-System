@@ -50,9 +50,16 @@ public class InventoryServiceGrpcClient {
                 else if(inventoryResponse.getMessage().equals("EventFullyBooked")){
                     throw new EventNotBookedException("Event has been fully booked");
                 }
+                else if(inventoryResponse.getMessage().equals("SystemBusy")){
+                    throw new EventNotBookedException("System is currently under heavy load. Please try again in a while");
+                }
+                else if(inventoryResponse.getMessage().equals("SystemBusy")){
+                    throw new EventNotBookedException("System is currently under heavy load. Please try again in a while");
+                }
+                else if(inventoryResponse.getMessage().equals("BookingFailed") || inventoryResponse.getMessage().equals("BookingInterrupted")){
+                    throw new EventNotBookedException("Booking Failed. Please try again");
+                }
             }
-
-
 
         }catch (StatusRuntimeException e) {
 

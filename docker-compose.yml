@@ -127,6 +127,17 @@ services:
     networks:
       - rezerve
 
+  rezerve-inventory-service-redis:
+    image: redis:7
+    container_name: rezerve_inventory_service_redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - inventory-service-redis-data:/data
+    networks:
+      - rezerve
+
   rezerve-inventory-service:
     build:
       context: ./rezerve-inventory-service
@@ -136,6 +147,7 @@ services:
     depends_on:
       - rezerve-inventory-service-db
       - rezerve-kafka
+      - rezerve-inventory-service-redis
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-inventory-service-db:5432/rezerve-inventory-db
       SPRING_DATASOURCE_USERNAME: admin-rezerve
@@ -143,6 +155,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+      INVENTORY_SERVICE_REDIS_HOST: rezerve-inventory-service-redis
+      INVENTORY_SERVICE_REDIS_PORT: 6379
     ports:
       - "6003:6003"
       - "9004:9004"
@@ -242,3 +256,4 @@ volumes:
   booking_postgres_data:
   payment_postgres_data:
   event-service-redis-data:
+  inventory-service-redis-data:

@@ -12,6 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.Set;
 
 @Configuration
 public class RedisConfig {
@@ -39,6 +40,7 @@ public class RedisConfig {
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
+                .initialCacheNames(Set.of("events"))
                 .build();
     }
 }

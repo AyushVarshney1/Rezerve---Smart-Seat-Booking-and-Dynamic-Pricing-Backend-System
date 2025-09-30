@@ -90,6 +90,23 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!-- Redis Dependency & SpringBoot cache annotations-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+<!--        FOR PROPER DISTRIBUTED LOCK MECHANISM-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.23.4</version>
+        </dependency>
+
 <!--        IF DATASOURCE ERROR WHEN IMAGE BUILDS (mvn clean package error in dockerfile), add H2-->
         <dependency>
             <groupId>com.h2database</groupId>

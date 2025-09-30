@@ -15,6 +15,7 @@ import com.rezerve.rezerveeventservice.model.Event;
 import com.rezerve.rezerveeventservice.repository.EventRepository;
 import com.rezerve.rezerveeventservice.util.CheckUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class EventService {
     private final CheckUpdateRequest checkUpdateRequest;
     private final EventKafkaProducer eventKafkaProducer;
     private final EventCacheableService eventCacheableService;
+    private final CacheManager cacheManager;
 
     public List<EventResponseDto> getAllEvents() {
         List<Event> events = eventRepository.findAll();
@@ -53,6 +55,8 @@ public class EventService {
 
         Event event = eventMapper.toTravelEvent(travelEventRequestDto);
         eventRepository.save(event);
+
+        cacheManager.getCache("events").put(event.getId(), event);
 
         eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats()));
 
