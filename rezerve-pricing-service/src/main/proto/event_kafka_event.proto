@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package event.events;
+option java_multiple_files = true;
+
+message EventPriceKafkaEvent{
+  int64 eventId = 1;
+  double basePrice = 2;
+  string eventCategory = 3;
+}

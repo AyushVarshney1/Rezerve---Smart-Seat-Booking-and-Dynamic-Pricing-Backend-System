@@ -22,4 +22,9 @@ public class KafkaTopicConfig {
     public NewTopic eventDeletedTopic(){
         return TopicBuilder.name("event.deleted.topic.v1").build();
     }
+
+    @Bean
+    public NewTopic eventPriceTopic(){
+        return TopicBuilder.name("event.price.topic.v1").build();
+    }
 }

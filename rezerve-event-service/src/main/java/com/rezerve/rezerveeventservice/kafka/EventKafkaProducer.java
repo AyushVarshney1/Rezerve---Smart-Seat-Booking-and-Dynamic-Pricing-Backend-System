@@ -1,8 +1,10 @@
 package com.rezerve.rezerveeventservice.kafka;
 
+import com.rezerve.rezerveeventservice.dto.request.EventPriceProducerDto;
 import com.rezerve.rezerveeventservice.dto.request.EventProducerDto;
 import event.events.EventCreatedKafkaEvent;
 import event.events.EventDeletedKafkaEvent;
+import event.events.EventPriceKafkaEvent;
 import event.events.EventSeatsUpdatedKafkaEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -62,6 +64,23 @@ public class EventKafkaProducer {
             log.info("Sent event deleted to topic");
         }catch (Exception e){
             log.error("Error in EventDeletedKafkaEvent sending eventDeletedKafkaEvent");
+        }
+    }
+
+    public void sendEventPriceKafkaEvent(EventPriceProducerDto eventPriceProducerDto){
+        EventPriceKafkaEvent eventPriceKafkaEvent = EventPriceKafkaEvent.newBuilder()
+                .setEventId(eventPriceProducerDto.getEventId())
+                .setBasePrice(eventPriceProducerDto.getPrice())
+                .setEventCategory(String.valueOf(eventPriceProducerDto.getEventCategory()))
+                .build();
+
+        byte[] bytes = eventPriceKafkaEvent.toByteArray();
+
+        try{
+            kafkaTemplate.send("event.price.topic.v1",bytes);
+            log.info("Sent event price event to topic");
+        }catch (Exception e){
+            log.error("Error in EventPriceKafkaEvent sending eventPriceKafkaEvent : {}", e.getMessage());
         }
     }
 }

@@ -74,6 +74,8 @@ public class EventService {
 
         eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
 
+        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory()));
+
         return  eventMapper.toEventResponseDto(event);
     }
 

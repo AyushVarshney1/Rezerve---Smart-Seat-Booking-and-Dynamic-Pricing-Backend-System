@@ -17,3 +17,9 @@ message EventSeatsUpdatedKafkaEvent{
 message EventDeletedKafkaEvent{
   int64 eventId = 1;
 }
+
+message EventPriceKafkaEvent{
+  int64 eventId = 1;
+  double basePrice = 2;
+  string eventCategory = 3;
+}

@@ -1,5 +1,6 @@
 package com.rezerve.rezerveeventservice.mapper;
 
+import com.rezerve.rezerveeventservice.dto.request.EventPriceProducerDto;
 import com.rezerve.rezerveeventservice.dto.request.EventProducerDto;
 import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
@@ -118,5 +119,15 @@ public class EventMapper {
         }
 
         return eventProducerDto;
+    }
+
+    public EventPriceProducerDto toEventPriceProducerDto(Long eventId, Double price, EventCategory eventCategory){
+        EventPriceProducerDto eventPriceProducerDto = new EventPriceProducerDto();
+
+        eventPriceProducerDto.setEventId(eventId);
+        eventPriceProducerDto.setPrice(price);
+        eventPriceProducerDto.setEventCategory(eventCategory);
+
+        return eventPriceProducerDto;
     }
 }
