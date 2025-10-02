@@ -21,6 +21,7 @@ public class EventKafkaProducer {
         EventCreatedKafkaEvent eventCreatedKafkaEvent = EventCreatedKafkaEvent.newBuilder()
                 .setEventId(eventProducerDto.getEventId())
                 .setTotalSeats(eventProducerDto.getTotalSeats())
+                .setEventType(String.valueOf(eventProducerDto.getEventCategory()))
                 .build();
 
         byte[] bytes = eventCreatedKafkaEvent.toByteArray();

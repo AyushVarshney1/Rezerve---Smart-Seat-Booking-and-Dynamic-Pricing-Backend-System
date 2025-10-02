@@ -1,5 +1,6 @@
 package com.rezerve.rezerveinventoryservice.model;
 
+import com.rezerve.rezerveinventoryservice.model.enums.EventCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,4 +25,8 @@ public class Inventory {
 
     @Column(nullable = false)
     private Integer availableSeats;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false)
+    private EventCategory eventCategory;
 }

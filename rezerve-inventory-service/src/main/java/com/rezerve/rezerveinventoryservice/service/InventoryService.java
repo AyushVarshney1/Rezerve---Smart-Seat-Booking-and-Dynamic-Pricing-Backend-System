@@ -114,6 +114,7 @@ public class InventoryService {
         inventory.setEventId(inventoryEventConsumerDto.getEventId());
         inventory.setTotalSeats(inventoryEventConsumerDto.getTotalSeats());
         inventory.setAvailableSeats(inventoryEventConsumerDto.getTotalSeats());
+        inventory.setEventCategory(inventoryEventConsumerDto.getEventCategory());
 
         inventoryRepository.save(inventory);
 

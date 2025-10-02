@@ -58,7 +58,7 @@ public class EventService {
 
         cacheManager.getCache("events").put(event.getId(), event);
 
-        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats()));
+        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
 
         return  eventMapper.toEventResponseDto(event);
     }
@@ -72,7 +72,7 @@ public class EventService {
         Event event = eventMapper.toVenueEvent(venueEventRequestDto);
         eventRepository.save(event);
 
-        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats()));
+        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
 
         return  eventMapper.toEventResponseDto(event);
     }
@@ -92,7 +92,7 @@ public class EventService {
 
         if(eventUpdateRequestDto.getTotalSeats() != null){
             eventKafkaProducer.sendEventSeatsUpdatedKafkaEvent(
-                    eventMapper.toEventProducerDto(newEvent.getId(), newEvent.getTotalSeats())
+                    eventMapper.toEventProducerDto(newEvent.getId(), newEvent.getTotalSeats(), null)
             );
         }
 
@@ -112,7 +112,7 @@ public class EventService {
 
         eventRepository.deleteById(eventId);
         eventKafkaProducer.sendEventDeletedKafkaEvent(
-                eventMapper.toEventProducerDto(eventId, null)
+                eventMapper.toEventProducerDto(eventId, null, null)
         );
     }
 

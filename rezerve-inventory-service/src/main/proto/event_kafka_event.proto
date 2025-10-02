@@ -6,6 +6,7 @@ option java_multiple_files = true;
 message EventCreatedKafkaEvent{
   int64 eventId = 1;
   int32 totalSeats = 2;
+  string eventType = 3;
 }
 
 message EventSeatsUpdatedKafkaEvent{

@@ -5,6 +5,7 @@ import com.rezerve.rezerveeventservice.dto.request.TravelEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.request.VenueEventRequestDto;
 import com.rezerve.rezerveeventservice.dto.response.*;
 import com.rezerve.rezerveeventservice.model.Event;
+import com.rezerve.rezerveeventservice.model.enums.EventCategory;
 import org.springframework.stereotype.Component;
 import auth.AuthResponse;
 
@@ -104,13 +105,16 @@ public class EventMapper {
         return eventServiceGrpcResponseDto;
     }
 
-    public EventProducerDto toEventProducerDto(Long eventId, Integer totalSeats){
+    public EventProducerDto toEventProducerDto(Long eventId, Integer totalSeats, EventCategory eventCategory){
 
         EventProducerDto eventProducerDto = new EventProducerDto();
 
         eventProducerDto.setEventId(eventId);
         if(totalSeats != null){
             eventProducerDto.setTotalSeats(totalSeats);
+        }
+        if(eventCategory != null){
+            eventProducerDto.setEventCategory(eventCategory);
         }
 
         return eventProducerDto;

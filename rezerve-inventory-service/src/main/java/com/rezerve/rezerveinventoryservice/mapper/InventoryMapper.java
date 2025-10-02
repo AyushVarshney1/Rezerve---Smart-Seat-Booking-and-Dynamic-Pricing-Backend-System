@@ -2,6 +2,7 @@ package com.rezerve.rezerveinventoryservice.mapper;
 
 import com.rezerve.rezerveinventoryservice.dto.InventoryEventConsumerDto;
 import com.rezerve.rezerveinventoryservice.dto.InventoryGrpcResponseDto;
+import com.rezerve.rezerveinventoryservice.model.enums.EventCategory;
 import event.events.EventCreatedKafkaEvent;
 import event.events.EventDeletedKafkaEvent;
 import event.events.EventSeatsUpdatedKafkaEvent;
@@ -14,20 +15,23 @@ public class InventoryMapper {
     public InventoryEventConsumerDto toInventoryEventConsumerDto(EventCreatedKafkaEvent event) {
         return new InventoryEventConsumerDto(
                 event.getEventId(),
-                event.getTotalSeats()
+                event.getTotalSeats(),
+                EventCategory.valueOf(event.getEventType())
         );
     }
 
     public InventoryEventConsumerDto toInventoryEventConsumerDto(EventSeatsUpdatedKafkaEvent event) {
         return new InventoryEventConsumerDto(
                 event.getEventId(),
-                event.getTotalSeats()
+                event.getTotalSeats(),
+                null
         );
     }
 
     public InventoryEventConsumerDto toInventoryEventConsumerDto(EventDeletedKafkaEvent event) {
         return new InventoryEventConsumerDto(
                 event.getEventId(),
+                null,
                 null
         );
     }
