@@ -28,42 +28,6 @@ public class InventoryService {
 
     private static final String INVENTORY_CACHE_PREFIX = "inventory:";
 
-//    public InventoryGrpcResponseDto bookSeats(Long eventId, int totalSeatsToBook){
-//
-//        EventSeatInfo eventSeatInfo = redisTemplate.opsForValue().get(INVENTORY_CACHE_PREFIX + eventId);
-//
-//        if (eventSeatInfo == null) {
-//            Optional<Inventory> optionalInventory = inventoryRepository.findByEventId(eventId);
-//            if(optionalInventory.isEmpty()){
-//                return inventoryMapper.toInventoryGrpcResponseDto(false, "EventNotFoundInInventory");
-//            }
-//
-//            Inventory inventory = optionalInventory.get();
-//            eventSeatInfo = new EventSeatInfo(inventory.getAvailableSeats(), inventory.getTotalSeats());
-//
-//            redisTemplate.opsForValue().set(INVENTORY_CACHE_PREFIX + eventId, eventSeatInfo);
-//        }
-//
-//
-//        if(eventSeatInfo.getAvailableSeats() == 0){
-//            return inventoryMapper.toInventoryGrpcResponseDto(false, "EventFullyBooked");
-//        }
-//
-//        if(eventSeatInfo.getAvailableSeats() < totalSeatsToBook){
-//            return inventoryMapper.toInventoryGrpcResponseDto(false, "NotEnoughAvailableSeats");
-//        }
-//
-//        eventSeatInfo.setAvailableSeats(eventSeatInfo.getAvailableSeats() - totalSeatsToBook);
-//
-//        Inventory inventory = inventoryRepository.findByEventId(eventId).get();
-//        inventory.setAvailableSeats(eventSeatInfo.getAvailableSeats());
-//        inventoryRepository.save(inventory);
-//
-//        redisTemplate.opsForValue().set(INVENTORY_CACHE_PREFIX + eventId, eventSeatInfo);
-//
-//        return inventoryMapper.toInventoryGrpcResponseDto(true, "SeatBooked");
-//    }
-
     @Transactional
     public InventoryGrpcResponseDto bookSeats(Long eventId, int totalSeatsToBook) {
         int maxRetries = 5;
@@ -196,5 +160,68 @@ public class InventoryService {
 
         String cacheKey = INVENTORY_CACHE_PREFIX + inventoryEventConsumerDto.getEventId();
         redisTemplate.delete(cacheKey);
+    }
+
+    @Transactional
+    public void releaseSeat(Long eventId, Integer seatsToRelease) {
+        int maxRetries = 5;
+        int baseDelayMs = 50;
+
+        for (int attempt = 0; attempt < maxRetries; attempt++) {
+            String lockKey = "lock:inventory:" + eventId;
+            String cacheKey = INVENTORY_CACHE_PREFIX + eventId;
+
+            RLock lock = redissonClient.getLock(lockKey);
+            boolean lockAcquired = false;
+
+            try {
+                lockAcquired = lock.tryLock(100, 5000, TimeUnit.MILLISECONDS);
+
+                if (!lockAcquired) {
+                    if (attempt < maxRetries - 1) {
+                        int delay = baseDelayMs * (int) Math.pow(2, attempt);
+                        Thread.sleep(delay);
+                        continue;
+                    } else {
+                        throw new RuntimeException("Failed to acquire lock for releasing seats after " + maxRetries + " attempts");
+                    }
+                }
+
+                Optional<Inventory> optionalInventory = inventoryRepository.findByEventId(eventId);
+
+                if (optionalInventory.isEmpty()) {
+                    throw new EventNotFoundException("Event with id: " + eventId + " not found");
+                }
+
+                Inventory inventory = optionalInventory.get();
+                int currentAvailableSeats = inventory.getAvailableSeats();
+                int newAvailableSeats = currentAvailableSeats + seatsToRelease;
+
+                if (newAvailableSeats > inventory.getTotalSeats()) {
+                    newAvailableSeats = inventory.getTotalSeats();
+                }
+
+                inventory.setAvailableSeats(newAvailableSeats);
+                inventoryRepository.save(inventory);
+
+                EventSeatInfo eventSeatInfo = new EventSeatInfo(
+                        inventory.getAvailableSeats(),
+                        inventory.getTotalSeats()
+                );
+                redisTemplate.opsForValue().set(cacheKey, eventSeatInfo);
+
+                return;
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Interrupted while releasing seats", e);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to release seats: " + e.getMessage());
+            } finally {
+                if (lockAcquired && lock.isHeldByCurrentThread()) {
+                    lock.unlock();
+                }
+            }
+        }
     }
 }

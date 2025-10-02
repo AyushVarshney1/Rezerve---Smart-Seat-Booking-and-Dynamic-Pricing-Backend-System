@@ -178,7 +178,18 @@ services:
     networks:
       - rezerve
 
-# ADD KAFKA DEPENDS ON & ENV VARIABLE FOR KAFKA IN BOOKING SERVICE
+  rezerve-booking-service-redis:
+    image: redis:7
+    container_name: rezerve_booking_service_redis
+    restart: always
+    command: redis-server --notify-keyspace-events Ex
+    ports:
+      - "6381:6379"
+    volumes:
+      - booking-service-redis-data:/data
+    networks:
+      - rezerve
+
 
   rezerve-booking-service:
     build:
@@ -189,6 +200,7 @@ services:
     depends_on:
       - rezerve-booking-service-db
       - rezerve-kafka
+      - rezerve-booking-service-redis
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-booking-service-db:5432/rezerve-booking-db
       SPRING_DATASOURCE_USERNAME: admin-rezerve
@@ -202,6 +214,8 @@ services:
       INVENTORY_SERVICE_ADDRESS: rezerve-inventory-service
       INVENTORY_SERVICE_GRPC_PORT: 9004
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+      BOOKING_SERVICE_REDIS_HOST: rezerve-booking-service-redis
+      BOOKING_SERVICE_REDIS_PORT: 6379
     ports:
       - "6002:6002"
       - "9003:9003"
@@ -257,3 +271,4 @@ volumes:
   payment_postgres_data:
   event-service-redis-data:
   inventory-service-redis-data:
+  booking-service-redis-data:

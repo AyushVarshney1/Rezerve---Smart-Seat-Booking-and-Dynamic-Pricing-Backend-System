@@ -1,5 +1,6 @@
 package com.rezerve.rezerveinventoryservice.kafka;
 
+import booking.events.ReleaseSeatsEvent;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.rezerve.rezerveinventoryservice.mapper.InventoryMapper;
 import com.rezerve.rezerveinventoryservice.service.InventoryService;
@@ -56,6 +57,19 @@ public class InventoryEventConsumer {
 
         }catch(InvalidProtocolBufferException e){
             log.error("Error deserializing event deleted event {}", e.getMessage());
+        }
+    }
+
+    @KafkaListener(topics = "release.seat.topic.v1", groupId = "rezerve-inventory-service")
+    public void consumeReleaseSeatKafkaEvent(byte[] bytes){
+        try{
+            ReleaseSeatsEvent event = ReleaseSeatsEvent.parseFrom(bytes);
+            log.info("Received release seat event from topic");
+
+            inventoryService.releaseSeat(event.getEventId(), event.getSeats());
+
+        }catch(InvalidProtocolBufferException e){
+            log.error("Error deserializing release seat event {}", e.getMessage());
         }
     }
 }

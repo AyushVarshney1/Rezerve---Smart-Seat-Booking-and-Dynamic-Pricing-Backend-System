@@ -42,4 +42,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEventNotBookedException(EventNotBookedException ex){
         return ResponseEntity.unprocessableEntity().body(ex.getMessage());
     }
+
+    @ExceptionHandler(BookingExpiredException.class)
+    public ResponseEntity<String> handleBookingExpiredException(BookingExpiredException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }
