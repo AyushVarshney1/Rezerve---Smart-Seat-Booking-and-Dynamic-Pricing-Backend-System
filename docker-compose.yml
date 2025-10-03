@@ -262,6 +262,42 @@ services:
     networks:
       - rezerve
 
+  rezerve-pricing-service-db:
+    image: postgres:15
+    container_name: rezerve_pricing_service_db
+    restart: always
+    environment:
+      POSTGRES_DB: rezerve-pricing-db
+      POSTGRES_USER: admin-rezerve
+      POSTGRES_PASSWORD: password-rezerve
+    ports:
+      - "8005:5432"
+    volumes:
+      - pricing_postgres_data:/var/lib/postgresql/data
+    networks:
+      - rezerve
+
+  rezerve-pricing-service:
+    build:
+      context: ./rezerve-pricing-service
+      dockerfile: Dockerfile
+    container_name: rezerve_pricing_service
+    restart: always
+    depends_on:
+      - rezerve-pricing-service-db
+      - rezerve-kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-pricing-service-db:5432/rezerve-pricing-db
+      SPRING_DATASOURCE_USERNAME: admin-rezerve
+      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SQL_INIT_MODE: always
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+    ports:
+      - "6005:6005"
+    networks:
+      - rezerve
+
 
 volumes:
   auth_postgres_data:
@@ -272,3 +308,4 @@ volumes:
   event-service-redis-data:
   inventory-service-redis-data:
   booking-service-redis-data:
+  pricing_postgres_data:

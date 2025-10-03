@@ -15,5 +15,4 @@ public class PricingService {
         eventPriceRepository.save(eventPrice);
     }
 
-
 }

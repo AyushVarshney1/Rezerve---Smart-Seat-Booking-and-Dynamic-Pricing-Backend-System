@@ -15,6 +15,8 @@ import com.rezerve.rezerveeventservice.model.Event;
 import com.rezerve.rezerveeventservice.repository.EventRepository;
 import com.rezerve.rezerveeventservice.util.CheckUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -34,6 +36,8 @@ public class EventService {
     private final EventKafkaProducer eventKafkaProducer;
     private final EventCacheableService eventCacheableService;
     private final CacheManager cacheManager;
+    private final AsyncKafkaService asyncKafkaService;
+    private static final Logger log = LoggerFactory.getLogger(EventService.class);
 
     public List<EventResponseDto> getAllEvents() {
         List<Event> events = eventRepository.findAll();
@@ -48,6 +52,7 @@ public class EventService {
     }
 
     public EventResponseDto createTravelEvent(String token, TravelEventRequestDto travelEventRequestDto) {
+        log.info("Thread: {} - Starting request", Thread.currentThread().getName());
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
         if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
             throw new UnauthorisedException("Only admins can create event");
@@ -58,14 +63,18 @@ public class EventService {
 
         cacheManager.getCache("events").put(event.getId(), event);
 
-        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
+//        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
+//
+//        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
 
-        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
+        asyncKafkaService.sendEventToKafka(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats());
 
+        log.info("Thread: {} - Returning response", Thread.currentThread().getName());
         return  eventMapper.toEventResponseDto(event);
     }
 
     public EventResponseDto createVenueEvent(String token, VenueEventRequestDto venueEventRequestDto) {
+        log.info("Thread: {} - Starting request", Thread.currentThread().getName());
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
         if(!authServiceGrpcResponseDto.getUserRole().equals("ADMIN")){
             throw new UnauthorisedException("Only admins can create event");
@@ -74,10 +83,13 @@ public class EventService {
         Event event = eventMapper.toVenueEvent(venueEventRequestDto);
         eventRepository.save(event);
 
-        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
+//        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
 
-        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
+//        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
 
+        asyncKafkaService.sendEventToKafka(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats());
+
+        log.info("Thread: {} - Returning response", Thread.currentThread().getName());
         return  eventMapper.toEventResponseDto(event);
     }
 
