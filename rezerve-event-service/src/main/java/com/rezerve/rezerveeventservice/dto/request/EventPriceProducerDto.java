@@ -11,4 +11,5 @@ public class EventPriceProducerDto {
     private Long eventId;
     private Double price;
     private EventCategory eventCategory;
+    private Integer totalSeats;
 }

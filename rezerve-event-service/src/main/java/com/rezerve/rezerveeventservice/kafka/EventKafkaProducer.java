@@ -72,6 +72,7 @@ public class EventKafkaProducer {
                 .setEventId(eventPriceProducerDto.getEventId())
                 .setBasePrice(eventPriceProducerDto.getPrice())
                 .setEventCategory(String.valueOf(eventPriceProducerDto.getEventCategory()))
+                .setSeats(eventPriceProducerDto.getTotalSeats())
                 .build();
 
         byte[] bytes = eventPriceKafkaEvent.toByteArray();

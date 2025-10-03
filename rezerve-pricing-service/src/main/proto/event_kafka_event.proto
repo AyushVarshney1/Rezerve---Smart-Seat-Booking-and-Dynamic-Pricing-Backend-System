@@ -7,4 +7,5 @@ message EventPriceKafkaEvent{
   int64 eventId = 1;
   double basePrice = 2;
   string eventCategory = 3;
+  int32 seats = 4;
 }

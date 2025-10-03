@@ -15,6 +15,8 @@ public class PricingMapper {
         eventPrice.setBasePrice(eventPriceKafkaEvent.getBasePrice());
         eventPrice.setCurrentPrice(eventPriceKafkaEvent.getBasePrice());
         eventPrice.setEventCategory(EventCategory.valueOf(eventPriceKafkaEvent.getEventCategory()));
+        eventPrice.setTotalSeats(eventPriceKafkaEvent.getSeats());
+        eventPrice.setAvailableSeats(eventPriceKafkaEvent.getSeats());
 
         return eventPrice;
     }

@@ -121,12 +121,13 @@ public class EventMapper {
         return eventProducerDto;
     }
 
-    public EventPriceProducerDto toEventPriceProducerDto(Long eventId, Double price, EventCategory eventCategory){
+    public EventPriceProducerDto toEventPriceProducerDto(Long eventId, Double price, EventCategory eventCategory, Integer totalSeats){
         EventPriceProducerDto eventPriceProducerDto = new EventPriceProducerDto();
 
         eventPriceProducerDto.setEventId(eventId);
         eventPriceProducerDto.setPrice(price);
         eventPriceProducerDto.setEventCategory(eventCategory);
+        eventPriceProducerDto.setTotalSeats(totalSeats);
 
         return eventPriceProducerDto;
     }

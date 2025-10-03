@@ -34,6 +34,12 @@ public class EventPrice {
     @Column(nullable = false)
     private Double currentPrice;
 
+    @Column(nullable = false)
+    private Integer totalSeats;
+
+    @Column(nullable = false)
+    private Integer availableSeats;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

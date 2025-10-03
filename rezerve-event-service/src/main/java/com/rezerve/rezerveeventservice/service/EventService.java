@@ -60,6 +60,8 @@ public class EventService {
 
         eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
 
+        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
+
         return  eventMapper.toEventResponseDto(event);
     }
 
@@ -74,7 +76,7 @@ public class EventService {
 
         eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
 
-        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory()));
+        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
 
         return  eventMapper.toEventResponseDto(event);
     }
