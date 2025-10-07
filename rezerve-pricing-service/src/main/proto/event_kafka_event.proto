@@ -9,3 +9,8 @@ message EventPriceKafkaEvent{
   string eventCategory = 3;
   int32 seats = 4;
 }
+
+message EventPriceUpdatedKafkaEvent{
+  int64 eventId = 1;
+  double newPrice = 2;
+}

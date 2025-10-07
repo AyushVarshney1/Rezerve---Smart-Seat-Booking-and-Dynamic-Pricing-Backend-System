@@ -37,7 +37,7 @@ public class BookingService {
     private static final Logger log = LoggerFactory.getLogger(BookingService.class);
 
     private static final String BOOKING_CACHE_KEY_PREFIX = "booking:";
-    private static final long CACHE_TTL_MINUTES = 10;
+    private static final long CACHE_TTL_MINUTES = 1;
 
     public List<BookingAdminResponseDto> getAllBookings(String token){
         AuthServiceGrpcResponseDto authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);

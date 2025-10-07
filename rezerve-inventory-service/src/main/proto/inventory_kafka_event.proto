@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package inventory.events;
+option java_multiple_files = true;
+
+message SeatBookingUpdated{
+  int64 eventId = 1;
+  int32 availableSeats = 2;
+  int32 totalSeats = 3;
+  string eventCategory = 4;
+}

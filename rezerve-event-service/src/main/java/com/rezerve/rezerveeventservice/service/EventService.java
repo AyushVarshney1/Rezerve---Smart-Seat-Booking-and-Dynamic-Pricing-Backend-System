@@ -46,9 +46,7 @@ public class EventService {
     }
 
     public EventResponseDto getEventById(Long eventId) {
-        Event event = eventCacheableService.getEventEntityById(eventId);
-
-        return eventMapper.toEventResponseDto(event);
+        return eventCacheableService.getEventEntityById(eventId);
     }
 
     public EventResponseDto createTravelEvent(String token, TravelEventRequestDto travelEventRequestDto) {
@@ -61,11 +59,8 @@ public class EventService {
         Event event = eventMapper.toTravelEvent(travelEventRequestDto);
         eventRepository.save(event);
 
-        cacheManager.getCache("events").put(event.getId(), event);
-
-//        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
-//
-//        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
+        EventResponseDto eventResponseDto = eventMapper.toEventResponseDto(event);
+        cacheManager.getCache("events").put(event.getId(), eventResponseDto);
 
         asyncKafkaService.sendEventToKafka(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats());
 
@@ -83,14 +78,13 @@ public class EventService {
         Event event = eventMapper.toVenueEvent(venueEventRequestDto);
         eventRepository.save(event);
 
-//        eventKafkaProducer.sendEventCreatedKafkaEvent(eventMapper.toEventProducerDto(event.getId(),event.getTotalSeats(),event.getCategory()));
-
-//        eventKafkaProducer.sendEventPriceKafkaEvent(eventMapper.toEventPriceProducerDto(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats()));
+        EventResponseDto eventResponseDto = eventMapper.toEventResponseDto(event);
+        cacheManager.getCache("events").put(event.getId(), eventResponseDto);
 
         asyncKafkaService.sendEventToKafka(event.getId(), event.getPrice(), event.getCategory(), event.getTotalSeats());
 
         log.info("Thread: {} - Returning response", Thread.currentThread().getName());
-        return  eventMapper.toEventResponseDto(event);
+        return eventMapper.toEventResponseDto(event);
     }
 
     @CachePut(value = "events", key = "#eventId")
@@ -132,10 +126,20 @@ public class EventService {
         );
     }
 
+    @CachePut(value = "events", key = "#eventId")
+    public EventResponseDto updateEventPrice(Long eventId, Double newPrice){
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event with id: " + eventId + " not found"));
+
+        event.setPrice(newPrice);
+
+        return eventMapper.toEventResponseDto(eventRepository.save(event));
+    }
+
     public EventServiceGrpcResponseDto getEventDetailsForBooking(Long eventId) {
         try {
-            Event event = eventCacheableService.getEventEntityById(eventId);
-            return eventMapper.toSuccessEventServiceGrpcResponseDto(event);
+            return eventMapper.toSuccessEventServiceGrpcResponseDto(eventCacheableService.getEventEntityById(eventId));
         } catch (EventNotFoundException e) {
             return eventMapper.toFailedEventServiceGrpcResponseDto();
         }

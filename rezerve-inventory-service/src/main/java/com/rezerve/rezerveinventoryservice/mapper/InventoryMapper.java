@@ -2,6 +2,8 @@ package com.rezerve.rezerveinventoryservice.mapper;
 
 import com.rezerve.rezerveinventoryservice.dto.InventoryEventConsumerDto;
 import com.rezerve.rezerveinventoryservice.dto.InventoryGrpcResponseDto;
+import com.rezerve.rezerveinventoryservice.dto.SeatBookingUpdatedDto;
+import com.rezerve.rezerveinventoryservice.model.Inventory;
 import com.rezerve.rezerveinventoryservice.model.enums.EventCategory;
 import event.events.EventCreatedKafkaEvent;
 import event.events.EventDeletedKafkaEvent;
@@ -44,5 +46,16 @@ public class InventoryMapper {
         inventoryGrpcResponseDto.setMessage(message);
 
         return inventoryGrpcResponseDto;
+    }
+
+    public SeatBookingUpdatedDto toSeatBookingUpdatedDto(Inventory inventory) {
+        SeatBookingUpdatedDto seatBookingUpdatedDto = new SeatBookingUpdatedDto();
+
+        seatBookingUpdatedDto.setEventId(inventory.getEventId());
+        seatBookingUpdatedDto.setTotalSeats(inventory.getTotalSeats());
+        seatBookingUpdatedDto.setAvailableSeats(inventory.getAvailableSeats());
+        seatBookingUpdatedDto.setEventCategory(inventory.getEventCategory());
+
+        return seatBookingUpdatedDto;
     }
 }

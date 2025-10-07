@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.rezerve.rezervepricingservice.mapper.PricingMapper;
 import com.rezerve.rezervepricingservice.service.PricingService;
 import event.events.EventPriceKafkaEvent;
+import inventory.events.SeatBookingUpdated;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,5 +30,19 @@ public class EventPriceKafkaConsumer {
             log.error("Error deserializing event price event {}", e.getMessage());
         }
     }
+
+    @KafkaListener(topics = "seat.booking.updated.v1", groupId = "rezerve-pricing-service")
+    public void consumeSeatBookingUpdatedEvent(byte[] bytes){
+        try{
+            SeatBookingUpdated seatBookingUpdated = SeatBookingUpdated.parseFrom(bytes);
+            log.info("Received Seat Booking Updated event {}", seatBookingUpdated);
+
+            pricingService.handleDynamicPricing(seatBookingUpdated);
+        }catch(InvalidProtocolBufferException e){
+            log.error("Error deserializing event price event {}", e.getMessage());
+        }
+    }
+
+
 
 }

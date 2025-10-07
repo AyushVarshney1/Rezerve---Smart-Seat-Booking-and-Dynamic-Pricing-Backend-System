@@ -18,5 +18,5 @@ public class BookingUserResponseDto {
     private Integer totalTickets;
     private Double totalPrice;
     private LocalDateTime createdDate;
-    private String message = "Complete payment under 10 minutes to confirm booking";
+    private String message = "Complete payment under 1 minute to confirm booking";
 }

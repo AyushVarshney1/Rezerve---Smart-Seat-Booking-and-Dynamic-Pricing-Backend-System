@@ -3,6 +3,7 @@ package com.rezerve.rezerveinventoryservice.service;
 import com.rezerve.rezerveinventoryservice.dto.EventSeatInfo;
 import com.rezerve.rezerveinventoryservice.dto.InventoryEventConsumerDto;
 import com.rezerve.rezerveinventoryservice.dto.InventoryGrpcResponseDto;
+import com.rezerve.rezerveinventoryservice.dto.SeatBookedEvent;
 import com.rezerve.rezerveinventoryservice.exception.EventNotFoundException;
 import com.rezerve.rezerveinventoryservice.mapper.InventoryMapper;
 import com.rezerve.rezerveinventoryservice.model.Inventory;
@@ -10,6 +11,9 @@ import com.rezerve.rezerveinventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +25,21 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class InventoryService {
 
+    private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
+
     private final InventoryRepository inventoryRepository;
     private final InventoryMapper inventoryMapper;
     private final RedisTemplate<String, EventSeatInfo> redisTemplate;
     private final RedissonClient redissonClient;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private static final String INVENTORY_CACHE_PREFIX = "inventory:";
 
     @Transactional
     public InventoryGrpcResponseDto bookSeats(Long eventId, int totalSeatsToBook) {
+
+        log.info("Thread: {} - Started seat booking", Thread.currentThread().getName());
+
         int maxRetries = 5;
         int baseDelayMs = 50;
 
@@ -48,6 +58,7 @@ public class InventoryService {
                         int delay = baseDelayMs * (int) Math.pow(2, attempt);
                         Thread.sleep(delay);
                         continue;
+                        
                     } else {
                         return inventoryMapper.toInventoryGrpcResponseDto(
                                 false,
@@ -92,6 +103,13 @@ public class InventoryService {
 
                 eventSeatInfo.setAvailableSeats(eventSeatInfo.getAvailableSeats() - totalSeatsToBook);
                 redisTemplate.opsForValue().set(cacheKey, eventSeatInfo);
+
+                Inventory updatedInventory = inventoryRepository.findByEventId(eventId)
+                        .orElseThrow(() -> new RuntimeException("Inventory not found after update"));
+
+                applicationEventPublisher.publishEvent(new SeatBookedEvent(updatedInventory));
+
+                log.info("Thread: {} - Updated Seat count", Thread.currentThread().getName());
 
                 return inventoryMapper.toInventoryGrpcResponseDto(true, "SeatBooked");
 
@@ -210,6 +228,11 @@ public class InventoryService {
                         inventory.getTotalSeats()
                 );
                 redisTemplate.opsForValue().set(cacheKey, eventSeatInfo);
+
+                Inventory updatedInventory = inventoryRepository.findByEventId(eventId)
+                        .orElseThrow(() -> new RuntimeException("Inventory not found after update"));
+
+                applicationEventPublisher.publishEvent(new SeatBookedEvent(updatedInventory));
 
                 return;
 

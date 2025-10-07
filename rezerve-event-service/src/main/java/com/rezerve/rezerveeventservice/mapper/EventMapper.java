@@ -93,14 +93,14 @@ public class EventMapper {
 
     }
 
-    public EventServiceGrpcResponseDto toSuccessEventServiceGrpcResponseDto(Event event){
+    public EventServiceGrpcResponseDto toSuccessEventServiceGrpcResponseDto(EventResponseDto eventResponseDto){
 
         EventServiceGrpcResponseDto eventServiceGrpcResponseDto = new EventServiceGrpcResponseDto();
 
         eventServiceGrpcResponseDto.setExists(true);
-        eventServiceGrpcResponseDto.setEventName(event.getName());
-        eventServiceGrpcResponseDto.setEventCategory(event.getCategory().toString());
-        eventServiceGrpcResponseDto.setPrice(event.getPrice());
+        eventServiceGrpcResponseDto.setEventName(eventResponseDto.getName());
+        eventServiceGrpcResponseDto.setEventCategory(eventResponseDto.getCategory().toString());
+        eventServiceGrpcResponseDto.setPrice(eventResponseDto.getPrice());
         eventServiceGrpcResponseDto.setMessage("EventFoundSuccessfully");
 
         return eventServiceGrpcResponseDto;

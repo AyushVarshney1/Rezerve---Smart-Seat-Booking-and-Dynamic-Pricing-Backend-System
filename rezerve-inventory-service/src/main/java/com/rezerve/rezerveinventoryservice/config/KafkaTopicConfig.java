@@ -1,4 +1,4 @@
-package com.rezerve.rezervepricingservice.config;
+package com.rezerve.rezerveinventoryservice.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic eventPriceUpdatedTopic(){
-        return TopicBuilder.name("").build();
+    public NewTopic seatBookingUpdated(){
+        return TopicBuilder.name("seat.booking.updated.v1").build();
     }
 }
