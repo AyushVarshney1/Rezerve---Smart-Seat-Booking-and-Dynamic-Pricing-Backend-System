@@ -16,10 +16,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AsyncKafkaService asyncKafkaService;
 
     public User createUser(AuthRequestDto authRequestDto) {
         User user = userMapper.toUser(authRequestDto);
         User savedUser = userRepository.save(user);
+
+        asyncKafkaService.sendAsyncUserCreatedEvent(savedUser.getEmail(), savedUser.getFullName(), savedUser.getPhoneNumber());
 
         return savedUser;
     }

@@ -6,12 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="rezerve-booking-service" />
+        <module name="rezerve-event-service" />
         <module name="rezerve-pricing-service" />
         <module name="rezerve-inventory-service" />
-        <module name="rezerve-booking-service" />
         <module name="rezerve-auth-service" />
-        <module name="rezerve-event-service" />
         <module name="rezerve-payment-service" />
+        <module name="rezerve-notification-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -21,6 +22,7 @@
       <module name="rezerve-booking-service" options="-parameters" />
       <module name="rezerve-event-service" options="-parameters" />
       <module name="rezerve-inventory-service" options="-parameters" />
+      <module name="rezerve-notification-service" options="-parameters" />
       <module name="rezerve-payment-service" options="-parameters" />
       <module name="rezerve-pricing-service" options="-parameters" />
     </option>

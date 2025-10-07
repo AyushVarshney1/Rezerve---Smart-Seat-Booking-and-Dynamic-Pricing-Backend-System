@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/rezerve-booking-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rezerve-event-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rezerve-inventory-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rezerve-notification-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rezerve-payment-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rezerve-pricing-service/src/main/java" charset="UTF-8" />
   </component>

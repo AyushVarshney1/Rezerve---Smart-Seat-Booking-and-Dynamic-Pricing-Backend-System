@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package auth.events;
+option java_multiple_files = true;
+
+message UserCreatedEvent{
+  string email = 1;
+  string fullName = 2;
+  string phoneNumber = 3;
+}
