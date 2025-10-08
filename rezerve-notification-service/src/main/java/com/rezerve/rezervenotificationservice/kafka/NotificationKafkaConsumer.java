@@ -20,6 +20,7 @@ public class NotificationKafkaConsumer {
 
     @KafkaListener(topics = "user.created.topic.v1", groupId = "rezerve-notification-service")
     public void consumeUserCreatedEvent(byte[] bytes){
+        log.info("Received UserCreatedEvent from Kafka");
         try{
             UserCreatedEvent userCreatedEvent = UserCreatedEvent.parseFrom(bytes);
             notificationService.sendUserCreatedNotification(userCreatedEvent);
@@ -30,6 +31,7 @@ public class NotificationKafkaConsumer {
 
     @KafkaListener(topics = "payment.successful.notification.topic.v1", groupId = "rezerve-notification-service")
     public void consumePaymentSuccessfulNotificationEvent(byte[] bytes){
+        log.info("Received PaymentSuccessfulNotificationKafkaEvent from Kafka");
         try{
             PaymentSuccessfulNotificationKafkaEvent paymentSuccessfulNotificationKafkaEvent = PaymentSuccessfulNotificationKafkaEvent.parseFrom(bytes);
 
@@ -42,6 +44,7 @@ public class NotificationKafkaConsumer {
 
     @KafkaListener(topics = "payment.failed.notification.topic.v1", groupId = "rezerve-notification-service")
     public void consumePaymentFailedNotificationEvent(byte[] bytes){
+        log.info("Received PaymentFailedNotificationKafkaEvent from Kafka");
         try{
             PaymentFailedNotificationKafkaEvent paymentFailedNotificationKafkaEvent = PaymentFailedNotificationKafkaEvent.parseFrom(bytes);
             notificationService.sendPaymentFailedNotification(paymentFailedNotificationKafkaEvent);

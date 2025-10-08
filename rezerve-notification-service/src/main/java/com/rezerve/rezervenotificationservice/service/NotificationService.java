@@ -53,6 +53,7 @@ public class NotificationService {
             javaMailSender.send(mimeMessage);
 
             notification.setStatus(NotificationStatus.SENT);
+            log.info("User Created Notification has been sent");
         } catch (Exception e) {
             notification.setStatus(NotificationStatus.FAILED);
             log.error(e.getMessage());
@@ -88,6 +89,7 @@ public class NotificationService {
             javaMailSender.send(mimeMessage);
 
             notification.setStatus(NotificationStatus.SENT);
+            log.info("Payment Successful Notification has been sent");
         } catch (Exception e) {
             notification.setStatus(NotificationStatus.FAILED);
             log.error(e.getMessage());
@@ -123,6 +125,7 @@ public class NotificationService {
             javaMailSender.send(mimeMessage);
 
             notification.setStatus(NotificationStatus.SENT);
+            log.info("Payment Failed Notification has been sent");
         } catch (Exception e) {
             notification.setStatus(NotificationStatus.FAILED);
             log.error(e.getMessage());
