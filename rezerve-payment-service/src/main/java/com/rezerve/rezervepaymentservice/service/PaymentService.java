@@ -30,6 +30,7 @@ public class PaymentService {
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final PaymentMapper paymentMapper;
     private final PaymentKafkaProducer paymentKafkaProducer;
+    private final AsyncKafkaService asyncKafkaService;
 
     public List<PaymentResponseDto> getAllPayments(String token){
         AuthServiceGrpcResponseDto  authServiceGrpcResponseDto = authServiceGrpcClient.extractUserInfo(token);
@@ -67,6 +68,8 @@ public class PaymentService {
         if(totalAmountToBePaid > amountSent){
             payment.setPaymentStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
+            asyncKafkaService.sendAsyncPaymentEvent(payment,"Amount sent: " + amountSent + " is less than total " +
+                    "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
             throw new InvalidPaymentAmountException("Amount sent: " + amountSent + " is less than total " +
                     "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
         }
@@ -74,6 +77,8 @@ public class PaymentService {
         if(totalAmountToBePaid < amountSent){
             payment.setPaymentStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
+            asyncKafkaService.sendAsyncPaymentEvent(payment,"Amount sent: " + amountSent + " is less than total " +
+                    "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
             throw new InvalidPaymentAmountException("Amount sent: " + amountSent + " is more than total " +
                     "amount to be paid: " +  totalAmountToBePaid + ". Please send exact amount to be paid");
         }
@@ -81,7 +86,8 @@ public class PaymentService {
         payment.setPaymentStatus(PaymentStatus.SUCCESSFUL);
         Payment savedPayment = paymentRepository.save(payment);
 
-        paymentKafkaProducer.sendPaymentSuccessfulKafkaEvent(savedPayment.getBookingId());
+        asyncKafkaService.sendAsyncPaymentEvent(payment,null);
+//        paymentKafkaProducer.sendPaymentSuccessfulKafkaEvent(savedPayment.getBookingId());
 
         return paymentMapper.toPaymentResponseDtoForUser(savedPayment);
     }
