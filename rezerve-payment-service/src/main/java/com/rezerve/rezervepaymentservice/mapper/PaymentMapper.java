@@ -6,7 +6,6 @@ import com.rezerve.rezervepaymentservice.dto.PaymentRequestDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDto;
 import com.rezerve.rezervepaymentservice.dto.PaymentResponseDtoForUser;
 import com.rezerve.rezervepaymentservice.model.Payment;
-import com.rezerve.rezervepaymentservice.model.enums.PaymentStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -54,13 +53,14 @@ public class PaymentMapper {
         return paymentResponseDtoForUser;
     }
 
-    public Payment toPayment(PaymentRequestDto paymentRequestDto, Long userId) {
+    public Payment toPayment(PaymentRequestDto paymentRequestDto, AuthServiceGrpcResponseDto authServiceGrpcResponseDto) {
         Payment payment = new Payment();
 
         payment.setPaymentId(UUID.randomUUID());
         payment.setAmount(paymentRequestDto.getAmount());
         payment.setBookingId(paymentRequestDto.getBookingId());
-        payment.setUserId(userId);
+        payment.setUserId(authServiceGrpcResponseDto.getUserId());
+        payment.setUserEmail(authServiceGrpcResponseDto.getUserEmail());
 
         return payment;
 

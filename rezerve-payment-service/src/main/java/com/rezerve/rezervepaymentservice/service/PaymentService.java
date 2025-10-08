@@ -9,7 +9,6 @@ import com.rezerve.rezervepaymentservice.exception.PaymentNotFoundException;
 import com.rezerve.rezervepaymentservice.exception.UnauthorisedException;
 import com.rezerve.rezervepaymentservice.grpc.AuthServiceGrpcClient;
 import com.rezerve.rezervepaymentservice.grpc.BookingServiceGrpcClient;
-import com.rezerve.rezervepaymentservice.kafka.PaymentKafkaProducer;
 import com.rezerve.rezervepaymentservice.mapper.PaymentMapper;
 import com.rezerve.rezervepaymentservice.model.Payment;
 import com.rezerve.rezervepaymentservice.model.enums.PaymentStatus;
@@ -29,7 +28,6 @@ public class PaymentService {
     private final BookingServiceGrpcClient bookingServiceGrpcClient;
     private final AuthServiceGrpcClient authServiceGrpcClient;
     private final PaymentMapper paymentMapper;
-    private final PaymentKafkaProducer paymentKafkaProducer;
     private final AsyncKafkaService asyncKafkaService;
 
     public List<PaymentResponseDto> getAllPayments(String token){
@@ -61,7 +59,7 @@ public class PaymentService {
 
         double totalAmountToBePaid = bookingServiceGrpcClient.checkBooking(paymentRequestDto.getBookingId());
 
-        Payment payment = paymentMapper.toPayment(paymentRequestDto,authServiceGrpcResponseDto.getUserId());
+        Payment payment = paymentMapper.toPayment(paymentRequestDto,authServiceGrpcResponseDto);
 
         double amountSent = paymentRequestDto.getAmount();
 

@@ -21,10 +21,10 @@ public class AsyncKafkaService {
 
         try{
             if(payment.getPaymentStatus().equals(PaymentStatus.FAILED)){
-                paymentKafkaProducer.sendPaymentFailedNotificationKafkaEvent(payment.getBookingId(),payment.getPaymentId(), payment.getAmount(), message);
+                paymentKafkaProducer.sendPaymentFailedNotificationKafkaEvent(payment.getBookingId(),payment.getPaymentId(), payment.getUserEmail(), payment.getAmount(), message);
             }else{
                 paymentKafkaProducer.sendPaymentSuccessfulKafkaEvent(payment.getBookingId());
-                paymentKafkaProducer.sendPaymentSuccessfulNotificationKafkaEvent(payment.getBookingId(),payment.getPaymentId(), payment.getAmount());
+                paymentKafkaProducer.sendPaymentSuccessfulNotificationKafkaEvent(payment.getBookingId(),payment.getPaymentId(), payment.getUserEmail(), payment.getAmount());
             }
         }catch (Exception e){
             log.error("Exception in AsyncKafkaService sendAsyncPaymentEvent",e);

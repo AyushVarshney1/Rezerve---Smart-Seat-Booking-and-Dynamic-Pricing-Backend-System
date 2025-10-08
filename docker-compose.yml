@@ -298,6 +298,49 @@ services:
     networks:
       - rezerve
 
+  rezerve-maildev-service:
+    image: maildev/maildev:latest
+    container_name: rezerve_maildev_service
+    restart: always
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - rezerve
+
+  rezerve-notification-service-db:
+    image: mongo:latest
+    container_name: rezerve_notification_service_db
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: rezerve-notification-db
+      MONGO_INITDB_ROOT_USERNAME: admin-rezerve
+      MONGO_INITDB_ROOT_PASSWORD: password-rezerve
+    ports:
+      - "8006:27017"
+    volumes:
+      - notification_mongodb_data:/data/db
+    networks:
+      - rezerve
+
+  rezerve-notification-service:
+    build:
+      context: ./rezerve-notification-service
+      dockerfile: Dockerfile
+    container_name: rezerve_notification_service
+    restart: always
+    depends_on:
+      - rezerve-notification-service-db
+      - rezerve-kafka
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin-rezerve:password-rezerve@rezerve-notification-service-db:27017/rezerve-notification-db?authSource=admin
+      SPRING_MAIL_HOST: rezerve-maildev-service
+      SPRING_MAIL_PORT: 1025
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+    ports:
+      - "6006:6006"
+    networks:
+      - rezerve
 
 volumes:
   auth_postgres_data:
@@ -309,3 +352,4 @@ volumes:
   inventory-service-redis-data:
   booking-service-redis-data:
   pricing_postgres_data:
+  notification_mongodb_data:

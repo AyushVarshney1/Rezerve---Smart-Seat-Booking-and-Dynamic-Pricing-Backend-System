@@ -22,6 +22,7 @@ public class NotificationKafkaConsumer {
     public void consumeUserCreatedEvent(byte[] bytes){
         try{
             UserCreatedEvent userCreatedEvent = UserCreatedEvent.parseFrom(bytes);
+            notificationService.sendUserCreatedNotification(userCreatedEvent);
         }catch(InvalidProtocolBufferException e){
             log.error("Error while parsing UserCreatedEvent", e);
         }
@@ -31,6 +32,9 @@ public class NotificationKafkaConsumer {
     public void consumePaymentSuccessfulNotificationEvent(byte[] bytes){
         try{
             PaymentSuccessfulNotificationKafkaEvent paymentSuccessfulNotificationKafkaEvent = PaymentSuccessfulNotificationKafkaEvent.parseFrom(bytes);
+
+            notificationService.sendPaymentSuccessfulNotification(paymentSuccessfulNotificationKafkaEvent);
+
         }catch(InvalidProtocolBufferException e){
             log.error("Error while parsing PaymentSuccessfulNotificationKafkaEvent", e);
         }
@@ -40,6 +44,8 @@ public class NotificationKafkaConsumer {
     public void consumePaymentFailedNotificationEvent(byte[] bytes){
         try{
             PaymentFailedNotificationKafkaEvent paymentFailedNotificationKafkaEvent = PaymentFailedNotificationKafkaEvent.parseFrom(bytes);
+            notificationService.sendPaymentFailedNotification(paymentFailedNotificationKafkaEvent);
+
         }catch(InvalidProtocolBufferException e){
             log.error("Error while parsing PaymentFailedNotificationKafkaEvent", e);
         }

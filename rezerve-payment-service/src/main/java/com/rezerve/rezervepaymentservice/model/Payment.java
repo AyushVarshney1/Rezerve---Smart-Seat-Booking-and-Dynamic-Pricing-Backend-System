@@ -31,6 +31,9 @@ public class Payment {
     private Long userId;
 
     @Column(nullable = false, updatable = false)
+    private String userEmail;
+
+    @Column(nullable = false, updatable = false)
     private Double amount;
 
     @Enumerated(EnumType.STRING)

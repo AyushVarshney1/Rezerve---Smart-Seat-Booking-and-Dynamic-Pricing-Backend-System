@@ -33,10 +33,11 @@ public class PaymentKafkaProducer {
         }
     }
 
-    public void sendPaymentSuccessfulNotificationKafkaEvent(UUID bookingId, UUID paymentId, Double amount){
+    public void sendPaymentSuccessfulNotificationKafkaEvent(UUID bookingId, UUID paymentId, String userEmail, Double amount){
         PaymentSuccessfulNotificationKafkaEvent paymentSuccessfulNotificationKafkaEvent = PaymentSuccessfulNotificationKafkaEvent.newBuilder()
                 .setBookingId(String.valueOf(bookingId))
                 .setPaymentId(String.valueOf(paymentId))
+                .setEmail(userEmail)
                 .setAmount(amount)
                 .build();
 
@@ -50,10 +51,11 @@ public class PaymentKafkaProducer {
         }
     }
 
-    public void sendPaymentFailedNotificationKafkaEvent(UUID bookingId, UUID paymentId, Double amount, String message){
+    public void sendPaymentFailedNotificationKafkaEvent(UUID bookingId, UUID paymentId, String userEmail, Double amount, String message){
         PaymentFailedNotificationKafkaEvent paymentFailedNotificationKafkaEvent = PaymentFailedNotificationKafkaEvent.newBuilder()
                 .setBookingId(String.valueOf(bookingId))
                 .setPaymentId(String.valueOf(paymentId))
+                .setEmail(userEmail)
                 .setAmount(amount)
                 .setMessage(message)
                 .build();
