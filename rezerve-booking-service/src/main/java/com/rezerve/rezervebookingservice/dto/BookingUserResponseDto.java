@@ -1,6 +1,5 @@
 package com.rezerve.rezervebookingservice.dto;
 
-import com.rezerve.rezervebookingservice.model.enums.BookingStatus;
 import com.rezerve.rezervebookingservice.model.enums.EventCategory;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +17,5 @@ public class BookingUserResponseDto {
     private Integer totalTickets;
     private Double totalPrice;
     private LocalDateTime createdDate;
-    private String message = "Complete payment under 1 minute to confirm booking";
+    private String message = "Complete payment under 10 minutes to confirm booking";
 }

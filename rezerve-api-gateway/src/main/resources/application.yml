@@ -1,0 +1,53 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: rezerve-api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            ## REST CLIENT -> http://localhost:7000/api/auth/login
+            ## API GATEWAY -> http://rezerve-auth-service:6000/auth/login
+
+            - id: rezerve-auth-service-route
+              uri: http://rezerve-auth-service:6000
+              predicates:
+                - Path=/api/auth/**
+              filters:
+                - StripPrefix=1
+
+            ## REST CLIENT -> http://localhost:7000/api/event
+            ## API GATEWAY -> http://rezerve-event-service:6001/login
+
+            - id: rezerve-event-service-route
+              uri: http://rezerve-event-service:6001
+              predicates:
+                - Path=/api/event/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation
+
+            ## REST CLIENT -> http://localhost:7000/api/booking
+            ## API GATEWAY -> http://rezerve-booking-service:6002/booking
+
+            - id: rezerve-booking-service-route
+              uri: http://rezerve-booking-service:6002
+              predicates:
+                - Path=/api/booking/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation
+
+            ## REST CLIENT -> http://localhost:7000/api/payment
+            ## API GATEWAY -> http://rezerve-payment-service:6004/payment
+
+            - id: rezerve-payment-service-route
+              uri: http://rezerve-payment-service:6004
+              predicates:
+                - Path=/api/payment/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation

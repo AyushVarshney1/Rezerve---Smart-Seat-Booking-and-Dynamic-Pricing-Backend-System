@@ -342,6 +342,19 @@ services:
     networks:
       - rezerve
 
+  rezerve-api-gateway:
+    build:
+      context: ./rezerve-api-gateway
+      dockerfile: Dockerfile
+    container_name: rezerve_api_gateway
+    restart: always
+    environment:
+      REZERVE_AUTH_SERVICE_URL: http://rezerve-auth-service:6000/auth
+    ports:
+      - "7000:7000"
+    networks:
+      - rezerve
+
 volumes:
   auth_postgres_data:
   event_postgres_data:

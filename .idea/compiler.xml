@@ -18,6 +18,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="rezerve-api-gateway" options="-parameters" />
       <module name="rezerve-auth-service" options="-parameters" />
       <module name="rezerve-booking-service" options="-parameters" />
       <module name="rezerve-event-service" options="-parameters" />
