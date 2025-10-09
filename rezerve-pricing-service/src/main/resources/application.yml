@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: rezerve-pricing-service
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+
+server:
+  port: 6005
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+#  metrics:
+#    export:
+#      prometheus:
+#        pushgateway:
+#          enabled: true
+#          base-url: http://rezerve-pushgateway:9091
+#          job: rezerve-pricing-service
+#          push-rate: 10s
+#          shutdown-operation: push
