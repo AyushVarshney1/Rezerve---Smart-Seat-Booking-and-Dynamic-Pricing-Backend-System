@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rezerve-booking-service" />
+        <module name="rezerve-api-gateway" />
         <module name="rezerve-event-service" />
         <module name="rezerve-pricing-service" />
         <module name="rezerve-inventory-service" />

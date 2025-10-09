@@ -35,9 +35,9 @@ services:
       JWT_SECRET: 6E141C5D561C2ACC14E87A271158EAB44C1F5E6734B98A27D12CF0348F1B2C9E
       SPRING_SQL_INIT_MODE: always
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-    ports:
-      - "6000:6000"
-      - "9001:9001"
+#    ports:
+#      - "6000:6000"
+#      - "9001:9001"
     networks:
       - rezerve
 
@@ -88,9 +88,9 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
       EVENT_SERVICE_REDIS_HOST: rezerve-event-service-redis
       EVENT_SERVICE_REDIS_PORT: 6379
-    ports:
-      - "6001:6001"
-      - "9002:9002"
+#    ports:
+#      - "6001:6001"
+#      - "9002:9002"
     networks:
       - rezerve
 
@@ -157,9 +157,9 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
       INVENTORY_SERVICE_REDIS_HOST: rezerve-inventory-service-redis
       INVENTORY_SERVICE_REDIS_PORT: 6379
-    ports:
-      - "6003:6003"
-      - "9004:9004"
+#    ports:
+#      - "6003:6003"
+#      - "9004:9004"
     networks:
       - rezerve
 
@@ -216,9 +216,9 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
       BOOKING_SERVICE_REDIS_HOST: rezerve-booking-service-redis
       BOOKING_SERVICE_REDIS_PORT: 6379
-    ports:
-      - "6002:6002"
-      - "9003:9003"
+#    ports:
+#      - "6002:6002"
+#      - "9003:9003"
     networks:
       - rezerve
 
@@ -257,8 +257,8 @@ services:
       BOOKING_SERVICE_ADDRESS: rezerve-booking-service
       BOOKING_SERVICE_GRPC_PORT: 9003
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-    ports:
-      - "6004:6004"
+#    ports:
+#      - "6004:6004"
     networks:
       - rezerve
 
@@ -293,8 +293,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-    ports:
-      - "6005:6005"
+#    ports:
+#      - "6005:6005"
     networks:
       - rezerve
 
@@ -337,8 +337,8 @@ services:
       SPRING_MAIL_HOST: rezerve-maildev-service
       SPRING_MAIL_PORT: 1025
       SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-    ports:
-      - "6006:6006"
+#    ports:
+#      - "6006:6006"
     networks:
       - rezerve
 
