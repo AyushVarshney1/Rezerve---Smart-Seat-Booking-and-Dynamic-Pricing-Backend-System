@@ -57,3 +57,20 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 > This flow demonstrates how a booking request travels through the system — showcasing how the **Booking Service** orchestrates calls between **Event**, and **Inventory** services, ensuring consistency through compensating actions and Redis TTL-based rollback.
 
 ![Booking Event Flow — Orchestration SAGA Pattern](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/75c325118147dbd7733027d25d014deda1378a18/Booking%20Event%20Flow.png)
+
+### Flow Summary
+
+1. **User initiates booking** through API Gateway → Booking Service.  
+2. Booking Service calls **Event Service (gRPC)** to verify event existence and pricing.  
+3. Calls **Inventory Service (gRPC)** to confirm seat availability.  
+4. Creates provisional booking in PostgreSQL and Redis (with TTL = 10 mins).  
+5. Returns booking ID to the client.
+
+---
+
+## 💰 Dynamic Pricing Flow — Choreography SAGA Pattern
+
+> The pricing updates are handled in a fully **decentralized, event-driven manner** using Kafka. Services react to events rather than direct orchestration calls, implementing a **Choreography SAGA Pattern**.
+
+![Dynamic Pricing Flow — Choreography SAGA Pattern](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/d0f0377eb4f232531d8cdcaef578f3f333159eb7/Dynamic%20Pricing%20Flow.png)
+
