@@ -17,12 +17,3 @@ management:
     web:
       exposure:
         include: prometheus
-#  metrics:
-#    export:
-#      prometheus:
-#        pushgateway:
-#          enabled: true
-#          base-url: http://rezerve-pushgateway:9091
-#          job: rezerve-pricing-service
-#          push-rate: 10s
-#          shutdown-operation: push

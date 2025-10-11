@@ -2,15 +2,402 @@ networks:
   rezerve:
     driver: bridge
 
+#services:
+#  rezerve-auth-service-db:
+#    image: postgres:15
+#    container_name: rezerve_auth_service_db
+#    restart: always
+#    environment:
+#      POSTGRES_DB: rezerve-auth-db
+#      POSTGRES_USER: admin-rezerve
+#      POSTGRES_PASSWORD: password-rezerve
+#    ports:
+#      - "8000:5432"
+#    volumes:
+#      - auth_postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-auth-service:
+#    build:
+#      context: ./rezerve-auth-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_auth_service
+#    restart: always
+#    depends_on:
+#      - rezerve-auth-service-db
+#      - rezerve-kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-auth-service-db:5432/rezerve-auth-db
+#      SPRING_DATASOURCE_USERNAME: admin-rezerve
+#      SPRING_DATASOURCE_PASSWORD: password-rezerve
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      JWT_SECRET: 6E141C5D561C2ACC14E87A271158EAB44C1F5E6734B98A27D12CF0348F1B2C9E
+#      SPRING_SQL_INIT_MODE: always
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+##    ports:
+##      - "6000:6000"
+##      - "9001:9001"
+#    networks:
+#      - rezerve
+#
+#  rezerve-event-service-db:
+#    image: postgres:15
+#    container_name: rezerve_event_service_db
+#    restart: always
+#    environment:
+#      POSTGRES_DB: rezerve-event-db
+#      POSTGRES_USER: admin-rezerve
+#      POSTGRES_PASSWORD: password-rezerve
+#    ports:
+#      - "8001:5432"
+#    volumes:
+#      - event_postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-event-service-redis:
+#    image: redis:7
+#    container_name: rezerve_event_service_redis
+#    restart: always
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - event-service-redis-data:/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-event-service:
+#    build:
+#      context: ./rezerve-event-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_event_service
+#    restart: always
+#    depends_on:
+#      - rezerve-event-service-db
+#      - rezerve-kafka
+#      - rezerve-event-service-redis
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-event-service-db:5432/rezerve-event-db
+#      SPRING_DATASOURCE_USERNAME: admin-rezerve
+#      SPRING_DATASOURCE_PASSWORD: password-rezerve
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_SQL_INIT_MODE: always
+#      AUTH_SERVICE_ADDRESS: rezerve-auth-service
+#      AUTH_SERVICE_GRPC_PORT: 9001
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+#      EVENT_SERVICE_REDIS_HOST: rezerve-event-service-redis
+#      EVENT_SERVICE_REDIS_PORT: 6379
+##    ports:
+##      - "6001:6001"
+##      - "9002:9002"
+#    networks:
+#      - rezerve
+#
+#  rezerve-kafka:
+#    image: bitnami/kafka:4.0
+#    container_name: rezerve_kafka
+#    restart: always
+#    environment:
+#      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://rezerve-kafka:9092,EXTERNAL://localhost:9094
+#      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+#      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@rezerve-kafka:9093
+#      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+#      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+#      KAFKA_CFG_NODE_ID: 0
+#      KAFKA_CFG_PROCESS_ROLES: broker,controller
+#    ports:
+#      - "9092:9092"
+#      - "9094:9094"
+#    networks:
+#      - rezerve
+#
+#  rezerve-inventory-service-db:
+#    image: postgres:15
+#    container_name: rezerve_inventory_service_db
+#    restart: always
+#    environment:
+#      POSTGRES_DB: rezerve-inventory-db
+#      POSTGRES_USER: admin-rezerve
+#      POSTGRES_PASSWORD: password-rezerve
+#    ports:
+#      - "8003:5432"
+#    volumes:
+#      - inventory_postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-inventory-service-redis:
+#    image: redis:7
+#    container_name: rezerve_inventory_service_redis
+#    restart: always
+#    ports:
+#      - "6380:6379"
+#    volumes:
+#      - inventory-service-redis-data:/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-inventory-service:
+#    build:
+#      context: ./rezerve-inventory-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_inventory_service
+#    restart: always
+#    depends_on:
+#      - rezerve-inventory-service-db
+#      - rezerve-kafka
+#      - rezerve-inventory-service-redis
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-inventory-service-db:5432/rezerve-inventory-db
+#      SPRING_DATASOURCE_USERNAME: admin-rezerve
+#      SPRING_DATASOURCE_PASSWORD: password-rezerve
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_SQL_INIT_MODE: always
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+#      INVENTORY_SERVICE_REDIS_HOST: rezerve-inventory-service-redis
+#      INVENTORY_SERVICE_REDIS_PORT: 6379
+##    ports:
+##      - "6003:6003"
+##      - "9004:9004"
+#    networks:
+#      - rezerve
+#
+#  rezerve-booking-service-db:
+#    image: postgres:15
+#    container_name: rezerve_booking_service_db
+#    restart: always
+#    environment:
+#      POSTGRES_DB: rezerve-booking-db
+#      POSTGRES_USER: admin-rezerve
+#      POSTGRES_PASSWORD: password-rezerve
+#    ports:
+#      - "8002:5432"
+#    volumes:
+#      - booking_postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-booking-service-redis:
+#    image: redis:7
+#    container_name: rezerve_booking_service_redis
+#    restart: always
+#    command: redis-server --notify-keyspace-events Ex
+#    ports:
+#      - "6381:6379"
+#    volumes:
+#      - booking-service-redis-data:/data
+#    networks:
+#      - rezerve
+#
+#
+#  rezerve-booking-service:
+#    build:
+#      context: ./rezerve-booking-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_booking_service
+#    restart: always
+#    depends_on:
+#      - rezerve-booking-service-db
+#      - rezerve-kafka
+#      - rezerve-booking-service-redis
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-booking-service-db:5432/rezerve-booking-db
+#      SPRING_DATASOURCE_USERNAME: admin-rezerve
+#      SPRING_DATASOURCE_PASSWORD: password-rezerve
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_SQL_INIT_MODE: always
+#      AUTH_SERVICE_ADDRESS: rezerve-auth-service
+#      AUTH_SERVICE_GRPC_PORT: 9001
+#      EVENT_SERVICE_ADDRESS: rezerve-event-service
+#      EVENT_SERVICE_GRPC_PORT: 9002
+#      INVENTORY_SERVICE_ADDRESS: rezerve-inventory-service
+#      INVENTORY_SERVICE_GRPC_PORT: 9004
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+#      BOOKING_SERVICE_REDIS_HOST: rezerve-booking-service-redis
+#      BOOKING_SERVICE_REDIS_PORT: 6379
+##    ports:
+##      - "6002:6002"
+##      - "9003:9003"
+#    networks:
+#      - rezerve
+#
+#  rezerve-payment-service-db:
+#    image: postgres:15
+#    container_name: rezerve_payment_service_db
+#    restart: always
+#    environment:
+#      POSTGRES_DB: rezerve-payment-db
+#      POSTGRES_USER: admin-rezerve
+#      POSTGRES_PASSWORD: password-rezerve
+#    ports:
+#      - "8004:5432"
+#    volumes:
+#      - payment_postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-payment-service:
+#    build:
+#      context: ./rezerve-payment-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_payment_service
+#    restart: always
+#    depends_on:
+#      - rezerve-payment-service-db
+#      - rezerve-kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-payment-service-db:5432/rezerve-payment-db
+#      SPRING_DATASOURCE_USERNAME: admin-rezerve
+#      SPRING_DATASOURCE_PASSWORD: password-rezerve
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_SQL_INIT_MODE: always
+#      AUTH_SERVICE_ADDRESS: rezerve-auth-service
+#      AUTH_SERVICE_GRPC_PORT: 9001
+#      BOOKING_SERVICE_ADDRESS: rezerve-booking-service
+#      BOOKING_SERVICE_GRPC_PORT: 9003
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+##    ports:
+##      - "6004:6004"
+#    networks:
+#      - rezerve
+#
+#  rezerve-pricing-service-db:
+#    image: postgres:15
+#    container_name: rezerve_pricing_service_db
+#    restart: always
+#    environment:
+#      POSTGRES_DB: rezerve-pricing-db
+#      POSTGRES_USER: admin-rezerve
+#      POSTGRES_PASSWORD: password-rezerve
+#    ports:
+#      - "8005:5432"
+#    volumes:
+#      - pricing_postgres_data:/var/lib/postgresql/data
+#    networks:
+#      - rezerve
+#
+#  rezerve-pricing-service:
+#    build:
+#      context: ./rezerve-pricing-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_pricing_service
+#    restart: always
+#    depends_on:
+#      - rezerve-pricing-service-db
+#      - rezerve-kafka
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-pricing-service-db:5432/rezerve-pricing-db
+#      SPRING_DATASOURCE_USERNAME: admin-rezerve
+#      SPRING_DATASOURCE_PASSWORD: password-rezerve
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_SQL_INIT_MODE: always
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+##    ports:
+##      - "6005:6005"
+#    networks:
+#      - rezerve
+#
+#  rezerve-maildev-service:
+#    image: maildev/maildev:latest
+#    container_name: rezerve_maildev_service
+#    restart: always
+#    ports:
+#      - "1080:1080"
+#      - "1025:1025"
+#    networks:
+#      - rezerve
+#
+#  rezerve-notification-service-db:
+#    image: mongo:latest
+#    container_name: rezerve_notification_service_db
+#    restart: always
+#    environment:
+#      MONGO_INITDB_DATABASE: rezerve-notification-db
+#      MONGO_INITDB_ROOT_USERNAME: admin-rezerve
+#      MONGO_INITDB_ROOT_PASSWORD: password-rezerve
+#    ports:
+#      - "8006:27017"
+#    volumes:
+#      - notification_mongodb_data:/data/db
+#    networks:
+#      - rezerve
+#
+#  rezerve-notification-service:
+#    build:
+#      context: ./rezerve-notification-service
+#      dockerfile: Dockerfile
+#    container_name: rezerve_notification_service
+#    restart: always
+#    depends_on:
+#      - rezerve-notification-service-db
+#      - rezerve-kafka
+#    environment:
+#      SPRING_DATA_MONGODB_URI: mongodb://admin-rezerve:password-rezerve@rezerve-notification-service-db:27017/rezerve-notification-db?authSource=admin
+#      SPRING_MAIL_HOST: rezerve-maildev-service
+#      SPRING_MAIL_PORT: 1025
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+##    ports:
+##      - "6006:6006"
+#    networks:
+#      - rezerve
+#
+#  rezerve-api-gateway:
+#    build:
+#      context: ./rezerve-api-gateway
+#      dockerfile: Dockerfile
+#    container_name: rezerve_api_gateway
+#    restart: always
+#    environment:
+#      REZERVE_AUTH_SERVICE_URL: http://rezerve-auth-service:6000/auth
+#    ports:
+#      - "7000:7000"
+#    networks:
+#      - rezerve
+#
+#  rezerve-prometheus:
+#    image: prom/prometheus:latest
+#    container_name: rezerve_prometheus
+#    restart: always
+#    volumes:
+#      - ./rezerve-prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#    depends_on:
+#      - rezerve-api-gateway
+#      - rezerve-pricing-service
+#      - rezerve-booking-service
+#      - rezerve-inventory-service
+#      - rezerve-event-service
+#      - rezerve-payment-service
+#      - rezerve-auth-service
+#      - rezerve-notification-service
+#    ports:
+#      - "9090:9090"
+#    networks:
+#      - rezerve
+#
+#  rezerve-grafana:
+#    image: grafana/grafana:latest
+#    container_name: rezerve_grafana
+#    restart: always
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=password
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - rezerve-prometheus
+#    networks:
+#      - rezerve
+
 services:
   rezerve-auth-service-db:
     image: postgres:15
     container_name: rezerve_auth_service_db
     restart: always
     environment:
-      POSTGRES_DB: rezerve-auth-db
-      POSTGRES_USER: admin-rezerve
-      POSTGRES_PASSWORD: password-rezerve
+      POSTGRES_DB: ${AUTH_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8000:5432"
     volumes:
@@ -28,16 +415,13 @@ services:
       - rezerve-auth-service-db
       - rezerve-kafka
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-auth-service-db:5432/rezerve-auth-db
-      SPRING_DATASOURCE_USERNAME: admin-rezerve
-      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-auth-service-db:5432/${AUTH_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      JWT_SECRET: 6E141C5D561C2ACC14E87A271158EAB44C1F5E6734B98A27D12CF0348F1B2C9E
+      JWT_SECRET: ${JWT_SECRET}
       SPRING_SQL_INIT_MODE: always
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-#    ports:
-#      - "6000:6000"
-#      - "9001:9001"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
     networks:
       - rezerve
 
@@ -46,9 +430,9 @@ services:
     container_name: rezerve_event_service_db
     restart: always
     environment:
-      POSTGRES_DB: rezerve-event-db
-      POSTGRES_USER: admin-rezerve
-      POSTGRES_PASSWORD: password-rezerve
+      POSTGRES_DB: ${EVENT_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8001:5432"
     volumes:
@@ -78,19 +462,16 @@ services:
       - rezerve-kafka
       - rezerve-event-service-redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-event-service-db:5432/rezerve-event-db
-      SPRING_DATASOURCE_USERNAME: admin-rezerve
-      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-event-service-db:5432/${EVENT_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
-      AUTH_SERVICE_ADDRESS: rezerve-auth-service
-      AUTH_SERVICE_GRPC_PORT: 9001
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+      AUTH_SERVICE_ADDRESS: ${AUTH_SERVICE_ADDRESS}
+      AUTH_SERVICE_GRPC_PORT: ${AUTH_SERVICE_GRPC_PORT}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
       EVENT_SERVICE_REDIS_HOST: rezerve-event-service-redis
       EVENT_SERVICE_REDIS_PORT: 6379
-#    ports:
-#      - "6001:6001"
-#      - "9002:9002"
     networks:
       - rezerve
 
@@ -117,9 +498,9 @@ services:
     container_name: rezerve_inventory_service_db
     restart: always
     environment:
-      POSTGRES_DB: rezerve-inventory-db
-      POSTGRES_USER: admin-rezerve
-      POSTGRES_PASSWORD: password-rezerve
+      POSTGRES_DB: ${INVENTORY_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8003:5432"
     volumes:
@@ -149,17 +530,14 @@ services:
       - rezerve-kafka
       - rezerve-inventory-service-redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-inventory-service-db:5432/rezerve-inventory-db
-      SPRING_DATASOURCE_USERNAME: admin-rezerve
-      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-inventory-service-db:5432/${INVENTORY_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
       INVENTORY_SERVICE_REDIS_HOST: rezerve-inventory-service-redis
       INVENTORY_SERVICE_REDIS_PORT: 6379
-#    ports:
-#      - "6003:6003"
-#      - "9004:9004"
     networks:
       - rezerve
 
@@ -168,9 +546,9 @@ services:
     container_name: rezerve_booking_service_db
     restart: always
     environment:
-      POSTGRES_DB: rezerve-booking-db
-      POSTGRES_USER: admin-rezerve
-      POSTGRES_PASSWORD: password-rezerve
+      POSTGRES_DB: ${BOOKING_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8002:5432"
     volumes:
@@ -190,7 +568,6 @@ services:
     networks:
       - rezerve
 
-
   rezerve-booking-service:
     build:
       context: ./rezerve-booking-service
@@ -202,23 +579,20 @@ services:
       - rezerve-kafka
       - rezerve-booking-service-redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-booking-service-db:5432/rezerve-booking-db
-      SPRING_DATASOURCE_USERNAME: admin-rezerve
-      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-booking-service-db:5432/${BOOKING_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
-      AUTH_SERVICE_ADDRESS: rezerve-auth-service
-      AUTH_SERVICE_GRPC_PORT: 9001
-      EVENT_SERVICE_ADDRESS: rezerve-event-service
-      EVENT_SERVICE_GRPC_PORT: 9002
-      INVENTORY_SERVICE_ADDRESS: rezerve-inventory-service
-      INVENTORY_SERVICE_GRPC_PORT: 9004
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
+      AUTH_SERVICE_ADDRESS: ${AUTH_SERVICE_ADDRESS}
+      AUTH_SERVICE_GRPC_PORT: ${AUTH_SERVICE_GRPC_PORT}
+      EVENT_SERVICE_ADDRESS: ${EVENT_SERVICE_ADDRESS}
+      EVENT_SERVICE_GRPC_PORT: ${EVENT_SERVICE_GRPC_PORT}
+      INVENTORY_SERVICE_ADDRESS: ${INVENTORY_SERVICE_ADDRESS}
+      INVENTORY_SERVICE_GRPC_PORT: ${INVENTORY_SERVICE_GRPC_PORT}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
       BOOKING_SERVICE_REDIS_HOST: rezerve-booking-service-redis
       BOOKING_SERVICE_REDIS_PORT: 6379
-#    ports:
-#      - "6002:6002"
-#      - "9003:9003"
     networks:
       - rezerve
 
@@ -227,9 +601,9 @@ services:
     container_name: rezerve_payment_service_db
     restart: always
     environment:
-      POSTGRES_DB: rezerve-payment-db
-      POSTGRES_USER: admin-rezerve
-      POSTGRES_PASSWORD: password-rezerve
+      POSTGRES_DB: ${PAYMENT_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8004:5432"
     volumes:
@@ -247,18 +621,16 @@ services:
       - rezerve-payment-service-db
       - rezerve-kafka
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-payment-service-db:5432/rezerve-payment-db
-      SPRING_DATASOURCE_USERNAME: admin-rezerve
-      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-payment-service-db:5432/${PAYMENT_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
-      AUTH_SERVICE_ADDRESS: rezerve-auth-service
-      AUTH_SERVICE_GRPC_PORT: 9001
-      BOOKING_SERVICE_ADDRESS: rezerve-booking-service
-      BOOKING_SERVICE_GRPC_PORT: 9003
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-#    ports:
-#      - "6004:6004"
+      AUTH_SERVICE_ADDRESS: ${AUTH_SERVICE_ADDRESS}
+      AUTH_SERVICE_GRPC_PORT: ${AUTH_SERVICE_GRPC_PORT}
+      BOOKING_SERVICE_ADDRESS: ${BOOKING_SERVICE_ADDRESS}
+      BOOKING_SERVICE_GRPC_PORT: ${BOOKING_SERVICE_GRPC_PORT}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
     networks:
       - rezerve
 
@@ -267,9 +639,9 @@ services:
     container_name: rezerve_pricing_service_db
     restart: always
     environment:
-      POSTGRES_DB: rezerve-pricing-db
-      POSTGRES_USER: admin-rezerve
-      POSTGRES_PASSWORD: password-rezerve
+      POSTGRES_DB: ${PRICING_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8005:5432"
     volumes:
@@ -287,14 +659,12 @@ services:
       - rezerve-pricing-service-db
       - rezerve-kafka
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-pricing-service-db:5432/rezerve-pricing-db
-      SPRING_DATASOURCE_USERNAME: admin-rezerve
-      SPRING_DATASOURCE_PASSWORD: password-rezerve
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rezerve-pricing-service-db:5432/${PRICING_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: always
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-#    ports:
-#      - "6005:6005"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
     networks:
       - rezerve
 
@@ -313,9 +683,9 @@ services:
     container_name: rezerve_notification_service_db
     restart: always
     environment:
-      MONGO_INITDB_DATABASE: rezerve-notification-db
-      MONGO_INITDB_ROOT_USERNAME: admin-rezerve
-      MONGO_INITDB_ROOT_PASSWORD: password-rezerve
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "8006:27017"
     volumes:
@@ -333,12 +703,10 @@ services:
       - rezerve-notification-service-db
       - rezerve-kafka
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://admin-rezerve:password-rezerve@rezerve-notification-service-db:27017/rezerve-notification-db?authSource=admin
+      SPRING_DATA_MONGODB_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@rezerve-notification-service-db:27017/${MONGO_DB}?authSource=admin
       SPRING_MAIL_HOST: rezerve-maildev-service
       SPRING_MAIL_PORT: 1025
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: rezerve-kafka:9092
-#    ports:
-#      - "6006:6006"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP}
     networks:
       - rezerve
 
@@ -375,30 +743,21 @@ services:
     networks:
       - rezerve
 
-#  rezerve-pushgateway:
-#    image: prom/pushgateway:latest
-#    container_name: rezerve_pushgateway
-#    depends_on:
-#      - rezerve-prometheus
-#    ports:
-#      - "9091:9091"
-#    networks:
-#      - rezerve
-
   rezerve-grafana:
     image: grafana/grafana:latest
     container_name: rezerve_grafana
     restart: always
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=password
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
     ports:
       - "3000:3000"
     depends_on:
       - rezerve-prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
     networks:
       - rezerve
-
 
 volumes:
   auth_postgres_data:
@@ -411,3 +770,4 @@ volumes:
   booking-service-redis-data:
   pricing_postgres_data:
   notification_mongodb_data:
+  grafana_data:
