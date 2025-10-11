@@ -90,9 +90,9 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 All microservices expose **Prometheus metrics** through the Spring Boot Actuator endpoint (`/actuator/prometheus`).  
 These metrics are scraped by **Prometheus** and visualized in **Grafana** using custom dashboards.
 
-> The following image illustrates the Grafana dashboard, which is used to visualise the metrics of the system.
+> The following image illustrates the Grafana dashboard, which is used to visualise the metrics of the system that Prometheus scrapes.
 
-![Grafana Dashboard](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/d0f0377eb4f232531d8cdcaef578f3f333159eb7/Dynamic%20Pricing%20Flow.png)
+![Grafana Dashboard](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/8431ce474d7dca8bfa6879e31628f56224de2c78/Grafana%20Dashboard.PNG)
 
 #### Monitored Metrics:
 
