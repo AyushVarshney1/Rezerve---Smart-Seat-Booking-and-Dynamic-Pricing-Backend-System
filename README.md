@@ -130,3 +130,22 @@ These metrics provide visibility into **service performance**, **resource utiliz
 
 ---
 
+### 🔮 Future Scope
+
+Planned enhancements to make the system more resilient, observable, and production-ready:
+
+1. ⚡ **Circuit Breaker Pattern (Resilience4J)**  
+   - Implement circuit breakers in inter-service communication to prevent cascading failures and improve fault tolerance.
+
+2. 🧭 **Distributed Tracing (OpenTelemetry + Jaeger)**  
+   - Introduce full tracing for requests across microservices to visualize latency, identify bottlenecks, and enhance debugging.
+
+3. 🚦 **API Rate Limiting & Throttling (Gateway)**  
+   - Implement rate limiting and request throttling at the API Gateway level to prevent abuse and ensure fair usage.
+
+4. 🧪 **Unit Testing (JUnit 5, Mockito, MockMVC)**  
+   - Add comprehensive unit tests to ensure service reliability and maintainable code quality.
+
+5. 🧰 **Integration Testing (TestContainers)**  
+   - Use TestContainers for containerized integration testing of Kafka, Redis, and databases to simulate real-world environments.
+
