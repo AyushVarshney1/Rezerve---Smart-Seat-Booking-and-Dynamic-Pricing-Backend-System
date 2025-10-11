@@ -48,4 +48,4 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 
 > The following diagram illustrates the high-level architecture of the Rezerve system — showing all microservices, their databases, and communication mechanisms (Kafka, gRPC, Redis, etc.).
 
-![Rezerve System Architecture](https://github.com/AyushVarshney1/NeoBanking-Backend-Platform/blob/7dd1c1792fad89b630b16aedfecc13b1377642a9/Neobank%20Architecture%20Animation.gif)
+![Rezerve System Architecture](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/b64041a36c63c4682db7ae4ecdcebe73ec963bc7/Rezerve%20Animated%20System%20Architecture%20Cropped.gif)
