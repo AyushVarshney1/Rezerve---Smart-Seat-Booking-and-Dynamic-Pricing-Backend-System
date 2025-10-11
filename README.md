@@ -40,7 +40,7 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
   - **Choreography Saga** for dynamic pricing updates  
 - 🧰 **Redis** for caching & booking timeout management  
 - 📊 **Observability Stack** with Prometheus + Grafana  
-- 🐳 **Docker Compose** for full local orchestration  
+- 🐳 **Docker Compose** for full local container orchestration  
 
 ---
 
