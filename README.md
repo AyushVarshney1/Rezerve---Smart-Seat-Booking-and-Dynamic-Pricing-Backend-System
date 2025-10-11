@@ -85,19 +85,33 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 
 ---
 
-## 📈 Observability Stack (Prometheus + Grafana)
+### 📊 Observability Stack (Prometheus + Grafana)
 
-> Each service exposes its own `/actuator/prometheus` endpoint to be scraped by **Prometheus**.  
-> **Grafana** visualizes latency, throughput, Kafka lag, and database performance metrics for deep insights into the health of the distributed system.
+All microservices expose **Prometheus metrics** through the Spring Boot Actuator endpoint (`/actuator/prometheus`).  
+These metrics are scraped by **Prometheus** and visualized in **Grafana** using custom dashboards.
 
-📊 Metrics Monitored:
-- Service latency (95th percentile)  
-- Kafka consumer lag  
-- Redis cache hits/misses  
-- Database connection pool usage  
-- Request rate & error rate per service  
+#### Monitored Metrics:
 
-📉 **_Insert Grafana Dashboard Screenshot here (optional)_**
+- 🕒 **Uptime**  
+- ⏰ **Start Time**  
+- 💾 **Heap Memory Used**  
+- 🧠 **Non-Heap Memory Used**  
+- ⚙️ **CPU Usage**  
+- 📈 **System Load Average**  
+- 🧩 **JVM Statistics**  
+  - G1 Eden Space (heap)  
+  - G1 Old Gen (heap)  
+  - G1 Survivor Space (heap)  
+- 🔌 **HikariCP Statistics**  
+  - Connection Pool Size  
+  - Connection Timeout Count  
+  - Active Connections  
+- 🌐 **HTTP Statistics**  
+  - Request Count  
+  - Average Response Time  
+
+These metrics provide visibility into **service performance**, **resource utilization**, and **request behavior** across all microservices, enabling proactive performance tuning and system health tracking.
+
 
 ---
 
