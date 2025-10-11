@@ -74,3 +74,45 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 
 ![Dynamic Pricing Flow — Choreography SAGA Pattern](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/d0f0377eb4f232531d8cdcaef578f3f333159eb7/Dynamic%20Pricing%20Flow.png)
 
+
+### Flow Summary
+
+1. **Inventory Service** publishes seat updated events to Kafka.  
+2. **Pricing Service** consumes these events to calculate new prices dynamically based on seat availability and event type.  
+3. Updated price information is sent to **Event Service** via Kafka.  
+4. **Event Service** updates event pricing in PostgreSQL and Redis cache.  
+5. No central coordinator — each service reacts autonomously to events.
+
+---
+
+## 📈 Observability Stack (Prometheus + Grafana)
+
+> Each service exposes its own `/actuator/prometheus` endpoint to be scraped by **Prometheus**.  
+> **Grafana** visualizes latency, throughput, Kafka lag, and database performance metrics for deep insights into the health of the distributed system.
+
+📊 Metrics Monitored:
+- Service latency (95th percentile)  
+- Kafka consumer lag  
+- Redis cache hits/misses  
+- Database connection pool usage  
+- Request rate & error rate per service  
+
+📉 **_Insert Grafana Dashboard Screenshot here (optional)_**
+
+---
+
+## 🧰 Tech Stack
+
+| Category | Technologies |
+|-----------|---------------|
+| **Backend Framework** | Spring Boot, Spring JPA, Spring Cloud Gateway |
+| **Messaging** | Apache Kafka |
+| **Inter-service Communication** | gRPC |
+| **Databases** | PostgreSQL, MongoDB |
+| **Caching & Locks** | Redis, Redisson |
+| **Auth & Security** | Spring Security (JWT) |
+| **Monitoring** | Prometheus, Grafana |
+| **Deployment** | Docker & Docker Compose |
+
+---
+
