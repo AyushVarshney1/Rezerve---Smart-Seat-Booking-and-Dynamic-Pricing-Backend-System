@@ -48,4 +48,4 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 
 > The following diagram illustrates the high-level architecture of the Rezerve system — showing all microservices, their databases, and communication mechanisms (Kafka, gRPC, Redis, etc.).
 
-📈 **_Insert your system architecture diagram here_**
+📈 **[_Insert your system architecture diagram here_](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/98556a82ef2aff556161b2c04d65dc3cbdef6743/Rezerve%20Animated%20System%20Architecture%20Cropped.gif)**
