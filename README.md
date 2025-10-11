@@ -49,3 +49,11 @@ It integrates **Kafka**, **Redis**, **gRPC**, and **PostgreSQL** with **Promethe
 > The following diagram illustrates the high-level architecture of the Rezerve system — showing all microservices, their databases, and communication mechanisms (Kafka, gRPC, Redis, etc.).
 
 ![Rezerve System Architecture](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/b64041a36c63c4682db7ae4ecdcebe73ec963bc7/Rezerve%20Animated%20System%20Architecture%20Cropped.gif)
+
+---
+
+## 🔄 Booking Event Flow — Orchestration SAGA Pattern
+
+> This flow demonstrates how a booking request travels through the system — showcasing how the **Booking Service** orchestrates calls between **Event**, **Inventory**, and **Payment** services, ensuring consistency through compensating actions and Redis TTL-based rollback.
+
+![Booking Event Flow — Orchestration SAGA Pattern](https://github.com/AyushVarshney1/Rezerve-Smart-Seat-Booking-and-Dynamic-Pricing-Backend-System/blob/75c325118147dbd7733027d25d014deda1378a18/Booking%20Event%20Flow.png)
