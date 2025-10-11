@@ -147,7 +147,7 @@ Planned enhancements to make the system more resilient, observable, and producti
 3. 🚦 **API Rate Limiting & Throttling (Gateway)**  
    - Implement rate limiting and request throttling at the API Gateway level to prevent abuse and ensure fair usage.
 
-4. 🧪 **Unit Testing (JUnit 5, Mockito, MockMVC)**  
+4. 🧪 **Unit Testing (JUnit 5, Mockito)**  
    - Add comprehensive unit tests to ensure service reliability and maintainable code quality.
 
 5. 🧰 **Integration Testing (TestContainers)**  
