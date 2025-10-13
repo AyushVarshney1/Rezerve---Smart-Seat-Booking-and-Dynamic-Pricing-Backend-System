@@ -6,7 +6,7 @@ services:
   rezerve-auth-service-db:
     image: postgres:15
     container_name: rezerve_auth_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${AUTH_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -23,7 +23,7 @@ services:
       context: ./rezerve-auth-service
       dockerfile: Dockerfile
     container_name: rezerve_auth_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-auth-service-db
       - rezerve-kafka
@@ -41,7 +41,7 @@ services:
   rezerve-event-service-db:
     image: postgres:15
     container_name: rezerve_event_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${EVENT_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -56,7 +56,7 @@ services:
   rezerve-event-service-redis:
     image: redis:7
     container_name: rezerve_event_service_redis
-    restart: always
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
@@ -69,7 +69,7 @@ services:
       context: ./rezerve-event-service
       dockerfile: Dockerfile
     container_name: rezerve_event_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-event-service-db
       - rezerve-kafka
@@ -91,7 +91,7 @@ services:
   rezerve-kafka:
     image: bitnami/kafka:4.0
     container_name: rezerve_kafka
-    restart: always
+    restart: unless-stopped
     environment:
       KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://rezerve-kafka:9092,EXTERNAL://localhost:9094
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
@@ -109,7 +109,7 @@ services:
   rezerve-inventory-service-db:
     image: postgres:15
     container_name: rezerve_inventory_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${INVENTORY_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -124,7 +124,7 @@ services:
   rezerve-inventory-service-redis:
     image: redis:7
     container_name: rezerve_inventory_service_redis
-    restart: always
+    restart: unless-stopped
     ports:
       - "6380:6379"
     volumes:
@@ -137,7 +137,7 @@ services:
       context: ./rezerve-inventory-service
       dockerfile: Dockerfile
     container_name: rezerve_inventory_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-inventory-service-db
       - rezerve-kafka
@@ -157,7 +157,7 @@ services:
   rezerve-booking-service-db:
     image: postgres:15
     container_name: rezerve_booking_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${BOOKING_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -172,7 +172,7 @@ services:
   rezerve-booking-service-redis:
     image: redis:7
     container_name: rezerve_booking_service_redis
-    restart: always
+    restart: unless-stopped
     command: redis-server --notify-keyspace-events Ex
     ports:
       - "6381:6379"
@@ -186,7 +186,7 @@ services:
       context: ./rezerve-booking-service
       dockerfile: Dockerfile
     container_name: rezerve_booking_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-booking-service-db
       - rezerve-kafka
@@ -212,7 +212,7 @@ services:
   rezerve-payment-service-db:
     image: postgres:15
     container_name: rezerve_payment_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${PAYMENT_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -229,7 +229,7 @@ services:
       context: ./rezerve-payment-service
       dockerfile: Dockerfile
     container_name: rezerve_payment_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-payment-service-db
       - rezerve-kafka
@@ -250,7 +250,7 @@ services:
   rezerve-pricing-service-db:
     image: postgres:15
     container_name: rezerve_pricing_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${PRICING_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -267,7 +267,7 @@ services:
       context: ./rezerve-pricing-service
       dockerfile: Dockerfile
     container_name: rezerve_pricing_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-pricing-service-db
       - rezerve-kafka
@@ -284,7 +284,7 @@ services:
   rezerve-maildev-service:
     image: maildev/maildev:latest
     container_name: rezerve_maildev_service
-    restart: always
+    restart: unless-stopped
     ports:
       - "1080:1080"
       - "1025:1025"
@@ -294,7 +294,7 @@ services:
   rezerve-notification-service-db:
     image: mongo:latest
     container_name: rezerve_notification_service_db
-    restart: always
+    restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_DB}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
@@ -311,7 +311,7 @@ services:
       context: ./rezerve-notification-service
       dockerfile: Dockerfile
     container_name: rezerve_notification_service
-    restart: always
+    restart: unless-stopped
     depends_on:
       - rezerve-notification-service-db
       - rezerve-kafka
@@ -328,7 +328,7 @@ services:
       context: ./rezerve-api-gateway
       dockerfile: Dockerfile
     container_name: rezerve_api_gateway
-    restart: always
+    restart: unless-stopped
     environment:
       REZERVE_AUTH_SERVICE_URL: http://rezerve-auth-service:6000/auth
     ports:
@@ -339,7 +339,7 @@ services:
   rezerve-prometheus:
     image: prom/prometheus:latest
     container_name: rezerve_prometheus
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./rezerve-prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
@@ -359,7 +359,7 @@ services:
   rezerve-grafana:
     image: grafana/grafana:latest
     container_name: rezerve_grafana
-    restart: always
+    restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
