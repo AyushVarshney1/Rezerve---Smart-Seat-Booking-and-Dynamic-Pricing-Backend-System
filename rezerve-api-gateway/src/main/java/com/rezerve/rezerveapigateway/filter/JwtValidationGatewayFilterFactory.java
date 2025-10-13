@@ -20,6 +20,12 @@ public class JwtValidationGatewayFilterFactory extends AbstractGatewayFilterFact
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
+            String path = exchange.getRequest().getURI().getPath();
+
+            if (isSwaggerOrOpenApiPath(path)) {
+                return chain.filter(exchange);
+            }
+
             String token = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
             if(token == null || !token.startsWith("Bearer ")) {
@@ -34,5 +40,12 @@ public class JwtValidationGatewayFilterFactory extends AbstractGatewayFilterFact
                     .toBodilessEntity()
                     .then(chain.filter(exchange));
         };
+    }
+
+    private boolean isSwaggerOrOpenApiPath(String path) {
+        return path.contains("/v3/api-docs")
+                || path.contains("/swagger-ui")
+                || path.contains("/swagger-resources")
+                || path.contains("/webjars/swagger-ui");
     }
 }

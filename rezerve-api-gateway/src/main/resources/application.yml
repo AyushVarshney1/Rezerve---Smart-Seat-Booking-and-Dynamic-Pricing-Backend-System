@@ -9,6 +9,45 @@ spring:
       server:
         webflux:
           routes:
+            ## Swagger UI API Documentation Routes
+
+#              The doc routes need to come BEFORE the general routes. Spring Cloud Gateway
+#              matches routes in the order they're defined, so the more specific /api/auth/v3/api-docs
+#              path must be checked before the broader /api/auth/** pattern.
+#              If /api/auth/** is checked first, it will match /api/auth/v3/api-docs and
+#              apply StripPrefix=1, sending the request to /auth/v3/api-docs (wrong!)
+#              By putting the specific docs routes first, they'll be matched correctly
+#              before the wildcard patterns
+
+
+            - id: rezerve-auth-service-docs
+              uri: http://rezerve-auth-service:6000
+              predicates:
+                - Path=/api/auth/v3/api-docs
+              filters:
+                - RewritePath=/api/auth/v3/api-docs, /v3/api-docs
+
+            - id: rezerve-event-service-docs
+              uri: http://rezerve-event-service:6001
+              predicates:
+                - Path=/api/event/v3/api-docs
+              filters:
+                - RewritePath=/api/event/v3/api-docs, /v3/api-docs
+
+            - id: rezerve-booking-service-docs
+              uri: http://rezerve-booking-service:6002
+              predicates:
+                - Path=/api/booking/v3/api-docs
+              filters:
+                - RewritePath=/api/booking/v3/api-docs, /v3/api-docs
+
+            - id: rezerve-payment-service-docs
+              uri: http://rezerve-payment-service:6004
+              predicates:
+                - Path=/api/payment/v3/api-docs
+              filters:
+                - RewritePath=/api/payment/v3/api-docs, /v3/api-docs
+
             ## REST CLIENT -> http://localhost:7000/api/auth/login
             ## API GATEWAY -> http://rezerve-auth-service:6000/auth/login
 
@@ -41,6 +80,7 @@ spring:
                 - StripPrefix=1
                 - JwtValidation
 
+
             ## REST CLIENT -> http://localhost:7000/api/payment
             ## API GATEWAY -> http://rezerve-payment-service:6004/payment
 
@@ -52,6 +92,21 @@ spring:
                 - StripPrefix=1
                 - JwtValidation
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: Auth Service
+        url: /api/auth/v3/api-docs
+      - name: Event Service
+        url: /api/event/v3/api-docs
+      - name: Booking Service
+        url: /api/booking/v3/api-docs
+      - name: Payment Service
+        url: /api/payment/v3/api-docs
 
 management:
   endpoints:
